@@ -1,52 +1,61 @@
 #include <iostream>
-#include <algorithm>
 using namespace std;
 
-struct PhanSo
+struct Fraction
 {
-	int tu, mau;
+	int numer, denom;
 
-	friend istream& operator >> (istream& is, PhanSo& ps)
+	int gcd(int a, int b)
 	{
-		is >> ps.tu >> ps.mau;
+		if (b == 0) return a;
+		return gcd(b, a % b);
+	}
+
+	void Simplifies()
+	{
+    	int d = gcd(this->numer, this->denom);
+    	this->numer /= d;
+    	this->denom /= d;
+    	return;
+    }
+
+	friend istream& operator >> (istream& is, Fraction& f)
+	{
+		is >> f.numer >> f.denom;
 		return is;
 	}
 
-	friend ostream& operator << (ostream& os, PhanSo ps)
+	friend ostream& operator << (ostream& os, Fraction f)
 	{
-		ps.RutGon();
-		os << ps.tu << "/" << ps.mau;
+		f.Simplifies();
+		os << f.numer << "/" << f.denom;
 		return os;
 	}
 
-	void RutGon() {
-		int d = __gcd(this->tu, this->mau);
-		this->tu /= d;
-		this->mau /= d;
-		return;
+	Fraction operator + (Fraction f)
+	{
+		Fraction res; 
+		res.numer = this->numer * f.denom + this->denom * f.numer;
+		res.denom = this->denom * f.denom;
+		return res;
 	}
 
-	PhanSo operator + (PhanSo ps) {
-		PhanSo kq;
-		kq.tu = this->tu * ps.mau + this->mau * ps.tu;
-		kq.mau = this->mau * ps.mau;
-		return kq;
+	bool operator  == (Fraction f)
+	{
+		return this->numer * f.denom == this->denom * f.numer;
 	}
 
-	bool operator == (PhanSo ps) {
-		return this->tu * ps.mau == this->mau * ps.tu;
+	bool operator != (Fraction f)
+	{
+		return ((*this) != f);
 	}
-	
-	bool operator != (PhanSo ps) {
-		return !(*this == ps);
-	}
-
 };
 
 int main()
 {
-	PhanSo a, b;
+	Fraction a, b;
 	cin >> a >> b;
 	cout << a + b;
+
 	return 0;
 }
