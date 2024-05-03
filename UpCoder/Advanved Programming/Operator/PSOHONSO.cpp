@@ -1,115 +1,120 @@
-#include<iostream>
+#include <iostream>
 using namespace std;
 
-struct PhanSo
+struct Fraction
 {
-	int tu, mau;
-	//qua tai >>
-	friend istream& operator >> (istream& is, PhanSo& ps)
-	{
-		is >> ps.tu >> ps.mau;
-		return is;
-	}
-	//qua tai <<
-	friend ostream& operator << (ostream& os, PhanSo ps)
-	{
-		os << ps.tu << "/" << ps.mau;
-		return os;
-	}
-	//ham ucln
-	int ucln(int a, int b)
-	{
-		if (b == 0) return a;
-		return ucln(b, a % b);
-	}
-	//ham rut gon PS
-	PhanSo RutGonPS(PhanSo& ps)
-	{
-		int d = ucln(ps.tu, ps.mau);
-		ps.tu /= d;
-		ps.mau /= d;
-		return ps;
-	}
-	//qua tai !=
-	bool operator != (PhanSo ps)
-	{
-		return this->tu * ps.mau != this->mau * ps.tu;
-	}
+    int numer, denom;
+
+    friend istream& operator >> (istream& is, Fraction& f)
+    {
+        is >> f.numer >> f.denom;
+        return is;
+    }
+
+    friend ostream& operator << (ostream& os, Fraction f)
+    {
+        os << f.numer << "/" << f.denom;
+        return os;
+    }
+
+    int gcd(int a, int b)
+    {
+        if (b == 0) return a;
+        return gcd(b, a % b);
+    }
+
+    void Simplified_Frac()
+    {
+        int d = gcd(numer, denom);
+        numer /= d;
+        denom /= d;
+    }
+
+    bool operator != (Fraction f)
+    {
+        return this->numer * f.denom != this->denom * f.numer;
+    }
 };
 
-struct HonSo
+struct Mixed_Number
 {
-	int n; PhanSo ps;
-	//qua tai >>
-	friend istream& operator >> (istream& is, HonSo& hs)
-	{
-		is >> hs.n >> hs.ps;
-		return is;
-	}
-	//qua tai <<
-	friend ostream& operator << (ostream& os, HonSo hs)
-	{
-		os << hs.n << " " << hs.ps;
-		return os;
-	}
-	//chuyen hs -> ps
-	PhanSo ChuyenHsPs(HonSo& hs)
-	{
-		PhanSo ps;
-		ps.tu = hs.n * hs.ps.mau + hs.ps.tu; // new tu = n * mau + tu 
-		ps.mau = hs.ps.mau; // new mau = mau;
-		return ps.RutGonPS(ps);
-	}
-	//chuyen ps -> hs
-	HonSo ChuyenPsHs(PhanSo& ps)
-	{
-		HonSo hs;
-		hs.n = ps.tu / ps.mau; // new n = tu /mau
-		hs.ps.tu = ps.tu % ps.mau; // new tu = tu % mau
-		hs.ps.mau = ps.mau; // new mau = mau
-		return hs;
-	}
-	//rut gon honso
-	HonSo RutGonHS(HonSo& hs)
-	{
-		int tmpTu = hs.n * hs.ps.mau + hs.ps.tu; //tmp tu = n / mau + tu 
-		hs.n = tmpTu / hs.ps.mau; // new n = tmp tu / mau  
-		hs.ps.tu = tmpTu % hs.ps.mau; // new tu = tmp tu % mau
-		hs.ps.RutGonPS(hs.ps); // new mau = mau
-		return hs;
-	}
-	//tong cac tp
-	int TongCacThanhPhanHS()
-	{
-		return this->n + this->ps.tu + this->ps.mau;
-	}
-	//qua tai >
-	bool operator > (HonSo hs)
-	{
-		return this->TongCacThanhPhanHS() > hs.TongCacThanhPhanHS();
-	}
-	//qua tai !=
-	bool operator != (HonSo hs)
-	{
-		return this->n != hs.n || this->ps.tu != hs.ps.tu || this->ps.mau != hs.ps.mau;
-	}
+    int number;
+    Fraction frac;
+
+    friend istream& operator >> (istream& is, Mixed_Number& m)
+    {
+        is >> m.number >> m.frac;
+        return is;
+    }
+
+    friend ostream& operator << (ostream& os, Mixed_Number m)
+    {
+        os << m.number << " " << m.frac;
+        return os;
+    }
+
+    Fraction Trans_Mixed_to_Frac()
+    {
+        Fraction f;
+        f.numer = this->number * this->frac.denom + this->frac.numer;
+        f.denom = this->frac.denom;
+        f.Simplified_Frac();
+        return f;
+    }
+
+    Mixed_Number Trans_Frac_to_Mixed()
+    {
+        Mixed_Number m;
+        m.number = this->frac.numer / this->frac.denom;
+        m.frac.numer = this->frac.numer % this->frac.denom;
+        m.frac.denom = this->frac.denom;
+        m.frac.Simplified_Frac();
+        return m;
+    }
+
+    Mixed_Number Simplified_Mixed()
+    {
+        Mixed_Number m;
+        int temp_Numer = this->number * this->frac.denom + this->frac.numer;
+        m.number = temp_Numer / this->frac.denom;
+        m.frac.numer = temp_Numer % this->frac.denom;
+        m.frac.denom = this->frac.denom;
+        m.frac.Simplified_Frac();
+        return m;
+    }
+
+    bool operator != (Mixed_Number m)
+    {
+        return this->number != m.number || this->frac != m.frac;
+    }
+
+    int tongCacThanhPhan()
+    {
+        return this->number + this->frac.numer + this->frac.denom;
+    }
+
+    bool operator > (Mixed_Number m)
+    {
+        return this->tongCacThanhPhan() > m.tongCacThanhPhan();
+    }
 };
+
 int main()
 {
-	HonSo hs1, hs2; PhanSo ps1, ps2; string str;
-	cin >> hs1 >> hs2 >> str;
+    Mixed_Number m1, m2;
+    string str;
+    cin >> m1 >> m2 >> str;
 
-	cout << (hs1 != hs2 ? "TRUE" : "FALSE") << endl;
-	cout << (hs1 > hs2 ? "TRUE" : "FALSE") << endl;
-	if (str == "true")
-	{
-		cout << hs1.RutGonHS(hs1) << endl << hs2.RutGonHS(hs2);
-	}
-	if (str == "false")
-	{
-		
-		cout << hs1.ChuyenHsPs(hs1) << endl;
-		cout << hs2.ChuyenHsPs(hs2);
-	}
-	return 0;
+    cout << (m1 != m2 ? "TRUE" : "FALSE") << endl;
+    cout << (m1 > m2 ? "TRUE" : "FALSE") << endl;
+    if (str == "true")
+    {
+        cout << m1.Simplified_Mixed() << endl << m2.Simplified_Mixed();
+    }
+    if (str == "false")
+    {
+        cout << m1.Trans_Mixed_to_Frac() << endl;
+        cout << m2.Trans_Mixed_to_Frac();
+    }
+    return 0;
 }
