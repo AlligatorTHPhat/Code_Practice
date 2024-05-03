@@ -1,81 +1,69 @@
 #include <iostream>
+#include <cmath>
 using namespace std;
 
-struct Array 
+struct Array
 {
-	int n;
-	int arr[100];
-	//qua tai = cua Array
-	void operator = (Array& a)
+	int size;
+	int values[100];
+
+	int operator [] (int index) { return values[index]; }
+	friend istream& operator >> (istream& is, Array& arr) 
 	{
-		n = a.n;
-		for (int i = 0; i < a.n; a)
-		{
-			arr[i] = a.arr[i];
-		}
-	}
-	//qua tai [] cua Array
-	int& operator [] (int i)
-	{
-		return arr[i];
-	}
-	//qua tai nhap
-	friend istream& operator >> (istream& is, Array& a)
-	{
-		is >> a.n;
-		for (int i = 0; i < a.n; i++)
-		{
-			is >> a.arr[i];
-		}
+		is >> arr.size;
+		for (int i = 0; i < arr.size; i++)
+			is >> arr.values[i];
+
 		return is;
 	}
-	//qua tai xuat
-	friend ostream& operator << (ostream& os, Array a)
+
+	friend ostream& operator << (ostream& os, Array arr)
 	{
-		for (int i = 0; i < a.n; i++)
-		{
-			os << a.arr[i] << " ";
-		}
+		for (int i = 0; i < arr.size; i++)
+			os << arr.values[i] << " ";
+
 		return os;
 	}
-    //qua tai cong 2 phan tu mang
-	Array operator + (Array a)
-	{
-		Array res;
-		res.n = max(this->n, a.n);
-		
-		for (int i = 0; i < res.n; i++)
-		{
-			if (i < this->n && i < a.n)
-				res.arr[i] = this->arr[i] + a.arr[i];
 
-			else res.arr[i] = (i < this->n ? this->arr[i] : a.arr[i]);
+	Array operator + (Array arr)
+	{
+		Array res; 
+		res.size = max(this->size, arr.size);
+		
+		for (int i = 0; i < res.size; i++)
+		{
+			if (i < this->size && i < arr.size) res.values[i] = this->values[i] + arr.values[i];
+			else res.values[i] = (i < this->size ? this->values[i] : arr.values[i]);
 		}
+		
 		return res;
 	}
-	//qua tai ==
-	bool operator == (Array a)
-	{
-		if (this->n != a.n) return 0;
 
-		for (int i = 0; i < this->n; i++)
+	bool operator == (Array arr)
+	{
+		if (this->size != arr.size) return 0;
+		else
 		{
-			if (this->arr[i] < a.arr[i])
-				return 0;
+			for (int i = 0; i < this->size; i++)
+			{
+				if (this->values[i] != arr.values[i]) return 0;
+			}
 		}
 		return 1;
 	}
 
-	bool operator != (Array a)
+	bool operator != (Array arr)
 	{
-	    return *this != a;
+		return (*(this) != arr);
 	}
+
 };
 
 int main()
 {
-	Array a1, a2;
-	cin >> a1 >> a2;
-	cout << (a1 == a2 ? "yes" : "no");
+	Array a, b;
+	cin >> a >> b;
+	cout << (a == b ? "yes" : "no");
+
 	return 0;
 }
