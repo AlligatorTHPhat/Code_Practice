@@ -1,76 +1,92 @@
 #include <iostream>
 #include <cmath>
+#include <iomanip>
+
 using namespace std;
 
-struct Point {
-    int x;
-    int y;
+struct Point
+{
+	int x, y;
 
-    friend istream& operator >> (istream& in, Point& other)  {
-        in >> other.x >> other.y;
-        return in;
-    }
+	friend istream& operator >> (istream& is, Point& O)
+	{
+		is >> O.x >> O.y;
 
-    friend ostream& operator << (ostream& out, Point other) {
-        out << "(" << other.x << "," << other.y << ")";
-    }
+		return is;
+	}
 
-    double distance(Point other) {
-        return sqrt(pow(other.x - this->x, 2) + pow(other.y - this->y, 2));
-    }
+	friend ostream& operator << (ostream& os, Point O)
+	{
+		os << "(" << O.x << "," << O.y << ")";
 
-    bool operator == (Point other) {
-        return this->x == other.x && this->y == other.y;
-    }
+		return os;
+	}
+
+	double distance(Point O)
+	{
+		return sqrt(pow(this->x - O.x, 2) + pow(this->y - O.y,2));
+	}
+
+	bool operator == (Point O)
+	{
+		return (this->x == O.x && this->y == O.y);
+	}
+
 };
 
-struct Triangle {
-    Point a;
-    Point b;
-    Point c;
+struct Triangle
+{
+	Point a, b, c;
 
-    friend istream& operator >> (istream& in, Triangle& other) {
-        in >> other.a >> other.b >> other.c;
-        return in;
-    }
+	friend istream& operator >> (istream& is, Triangle& T)
+	{
+		is >> T.a >> T.b >> T.c;
 
-    friend ostream& operator << (ostream& out, Triangle other) {
-        out << other.a << other.b << other.c;
-        return out;
-    }
+		return is;
+	}
 
-    double perimeter() {
-        return a.distance(b) + b.distance(c) + c.distance(a);
-    }
+	friend ostream& operator << (ostream& os, Triangle  T)
+	{
+		os << T.a << T.b << T.c;
 
-    double operator + (Triangle other) {
-        return this->perimeter() + other.perimeter();
-    }
+		return os;
+	}
 
-    bool operator < (Triangle other) {
-        return this->perimeter() < other.perimeter();
-    }
+	double Perimeter()
+	{
+		return a.distance(b)+ b.distance(c) + c.distance(a);
+	}
 
-    bool operator == (Triangle other) {
-        if ((this->a == other.a || this->a == other.b || this->a == other.c) &&
-            (this->b == other.b || this->b == other.c || this->b == other.a) &&
-            (this->c == other.c || this->c == other.a || this->c == other.b)) return true;
-        return false;
-    }
+	double operator + (Triangle T)
+	{
+		return this->Perimeter() + T.Perimeter();
+	}
+
+	bool operator < (Triangle T)
+	{
+		return this->Perimeter() < T.Perimeter();
+	}
+
+	bool operator == (Triangle T)
+	{
+		if ((this->a == T.a || this->a == T.b || this->a == T.c) &&
+			(this->b == T.a || this->b == T.b || this->b == T.c) &&
+			(this->c == T.a || this->c == T.b || this->c == T.c)) return 1;
+	}
 };
+int main()
+{
+	Triangle a, b;
+	cin >> a >> b;
 
-int main() {
-    Triangle a, b; 
-    cin >> a >> b;
-    
-    cout << a << endl;
-    cout << b << endl;
+	cout << a << endl;
+	cout << b << endl;
 
-    if (a < b) cout << "TRUE" << endl;
-    else cout << "FALSE" << endl;
+	if (a < b) cout << "TRUE" << endl;
+	else cout << "FALSE" << endl;
 
-    if (a == b) cout << "TRUE" << endl;
-    else cout << "FALSE" << endl;
+	if (a == b) cout << "TRUE" << endl;
+	else cout << "FALSE" << endl;
 
-    return 0;
+	return 0;
 }
