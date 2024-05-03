@@ -1,57 +1,62 @@
 #include <iostream>
+#include <cmath>
 using namespace std;
 
 struct Array
 {
-	int n;
-	int arr[100];
+	int size;
+	int values[100];
 
-	void operator = (Array& a)
+	int operator [] (int index) { return values[index]; }
+	friend istream& operator >> (istream& is, Array& arr) 
 	{
-		n = a.n;
-		for (int i = 0; i < a.n; i++)
-		{
-			arr[i] = a.arr[i];
-		}
-	}
+		is >> arr.size;
+		for (int i = 0; i < arr.size; i++)
+			is >> arr.values[i];
 
-	int& operator [] (int i)
-	{
-		return arr[i];
-	}
-
-	friend istream& operator >> (istream& is, Array& a)
-	{
-		is >> a.n;
-		for (int i = 0; i < a.n; i++)
-		{
-			is >> a.arr[i];
-		}
 		return is;
 	}
 
-	friend ostream& operator << (ostream& os, Array a)
+	friend ostream& operator << (ostream& os, Array arr)
 	{
-		for (int i = 0; i < a.n; i++)
-		{
-			os << a.arr[i] << " ";
-		}
+		for (int i = 0; i < arr.size; i++)
+			os << arr.values[i] << " ";
+
 		return os;
 	}
 
-	Array operator + (Array a)
+	Array operator + (Array arr)
 	{
-		Array res;
-		res.n = max(this->n, a.n);
-
-		for (int i = 0; i < res.n; i++)
+		Array res; 
+		res.size = max(this->size, arr.size);
+		
+		for (int i = 0; i < res.size; i++)
 		{
-			if (i < this->n && i < a.n)
-				res.arr[i] = this->arr[i] + a.arr[i];
-			else res.arr[i] = (i < this->n ? this->arr[i] : a.arr[i]);
+			if (i < this->size && i < arr.size) res.values[i] = this->values[i] + arr.values[i];
+			else res.values[i] = (i < this->size ? this->values[i] : arr.values[i]);
 		}
+		
 		return res;
 	}
+
+	bool operator == (Array arr)
+	{
+		if (this->size != arr.size) return 0;
+		else
+		{
+			for (int i = 0; i < this->size; i++)
+			{
+				if (this->values[i] != arr.values[i]) return 0;
+			}
+		}
+		return 1;
+	}
+
+	bool operator != (Array arr)
+	{
+		return (*(this) != arr);
+	}
+
 };
 
 int main()
@@ -59,5 +64,6 @@ int main()
 	Array a, b;
 	cin >> a >> b;
 	cout << a + b;
+
 	return 0;
 }
