@@ -1,54 +1,64 @@
 #include <iostream>
 using namespace std;
 
-struct BacNhat
+struct BacNhat 
 {
 	int a, b;
+	int num;
 
-	friend istream& operator >> (istream& is, BacNhat& b1)
+	friend istream& operator >> (istream& is, BacNhat& B1)
 	{
-		is >> b1.a >> b1.b;
+		is >> B1.a >> B1.b;
 		return is;
 	}
 
-	friend ostream& operator << (ostream& os, BacNhat b1)
+	friend ostream& operator << (ostream& os, BacNhat B1)
 	{
-		os << b1.a << "x+" << b1.b;
+		os << B1.a << "x";
+		if (B1.b < 0) cout << "-" << B1.b;
+		else cout << "+" << B1.b;
+
 		return os;
 	}
 
-	int TinhGiaTri(int n)
+	int Sum(int num)
 	{
-		int res = this->a * n + this->b;
+		return this->a * num + b;
+	}
+
+	BacNhat operator + (BacNhat B1)
+	{
+		BacNhat res;
+		res.a = this->a + B1.a;
+		res.b = this->b + B1.b;
 		return res;
 	}
-	BacNhat operator + (BacNhat b1)
+
+	bool operator == (BacNhat B1)
 	{
-		BacNhat kq;
-		kq.a = this->a + b1.a;
-		kq.b = this->b + b1.b;
-		return kq;
+		return this->a + this->b == B1.a + B1.b;
 	}
 
-	bool operator == (BacNhat b1)
+	bool operator != (BacNhat B1)
 	{
-		return this->a + this->b == b1.a + b1.b;
-	}
-
-	bool operator != (BacNhat b1)
-	{
-		return !(*this == b1);
+		return (*this) != B1;
 	}
 };
+
 int main()
 {
-	int n;
-	BacNhat ab1, bb1;
-	cin >> ab1 >> bb1 >> n;
-	cout << ab1 << endl << bb1 << endl;
-	cout << ab1 << "+" << bb1 << "=" << ab1 + bb1 << endl;
-	cout << ab1.TinhGiaTri(n) << endl;
-	cout << bb1.TinhGiaTri(n) << endl;
-	cout << (ab1 == bb1 ? "TRUE" : "FALSE"); \
+	BacNhat a,b;
+	cin >>a >> b;
+
+	int num;
+	cin >> num; 
+
+	cout << a << endl;
+	cout << b << endl;
+	cout << a << "+" << b << "=" << a + b << endl;
+	cout << a.Sum(num) << endl;
+	cout << b.Sum(num) << endl;
+	cout << (a == b ? "TRUE" : "FALSE");
+
 	return 0;
 }
