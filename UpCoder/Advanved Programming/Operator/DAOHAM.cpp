@@ -1,180 +1,123 @@
 #include <iostream>
-#include <istream>
-#include <ostream>
-#include <math.h>
+#include <cmath> // Use cmath instead of math.h for C++
 
 using namespace std;
 
-struct BACNHAT{
-	float a[100];
-	int b[100], n;
-
+struct Polynomial {
+    float coefficients[100];
+    int powers[100];
+    int size;
 };
 
-istream& operator >>(istream &is, BACNHAT &bn);
-ostream& operator <<(ostream &os, BACNHAT bn);
-float Tinh(BACNHAT bn, float x);
-BACNHAT daoHam(BACNHAT & bn);
-int main()
-{
-	float x;
-	BACNHAT bn;
-	cin >> bn;
-	cin >> x;
-	
-	cout << bn << endl;
-	
-	
-	cout << Tinh(bn, x) << endl;
-	cout << daoHam(bn);
-	//system("pause");
-	return 0;
+// Overloaded extraction operator for input
+istream& operator>>(istream &is, Polynomial &poly) {
+    is >> poly.size;
+    for (int i = 0; i < poly.size; ++i) {
+        is >> poly.coefficients[i];
+    }
+    for (int i = 0; i < poly.size; ++i) {
+        is >> poly.powers[i];
+    }
+    return is;
 }
-istream& operator >>(istream &is, BACNHAT &bn)
-{
-	is >> bn.n;
-	for (int i = 0; i < bn.n; ++i)
-	{
-		is >> bn.a[i];
-	}
-	for (int i = 0; i < bn.n; ++i)
-	{
-		is >> bn.b[i];
-	}
-	return is;
+
+// Overloaded insertion operator for output
+ostream& operator<<(ostream &os, Polynomial poly) {
+    if (poly.coefficients[0] == 0) {
+        for (int i = 1; i < poly.size; ++i) {
+            poly.coefficients[i - 1] = poly.coefficients[i];
+            poly.powers[i - 1] = poly.powers[i];
+        }
+        poly.size -= 1;
+    }
+    
+    for (int i = 0; i < poly.size; ++i) {
+        if (i == 0) {
+            if (poly.coefficients[i] != 0) {
+                if (poly.coefficients[i] == 1) {
+                    if (poly.powers[i] == 0) {
+                        cout << poly.coefficients[i];
+                    } else {
+                        if (poly.powers[i] == 1) {
+                            cout << "x";
+                        } else {
+                            cout << "x^" << poly.powers[i];
+                        }
+                    }
+                } else {
+                    if (poly.powers[i] == 0) {
+                        cout << poly.coefficients[i];
+                    } else {
+                        if (poly.powers[i] == 1) {
+                            cout << poly.coefficients[i] << "x";
+                        } else {
+                            cout << poly.coefficients[i] << "x^" << poly.powers[i];
+                        }
+                    }
+                }
+            }
+        } else {
+            if (poly.coefficients[i] != 0) {
+                if (poly.coefficients[i] == 1) {
+                    if (poly.powers[i] == 0) {
+                        cout << " + " << poly.coefficients[i];
+                    } else {
+                        if (poly.powers[i] == 1) {
+                            cout << " + x";
+                        } else {
+                            cout << " + x^" << poly.powers[i];
+                        }
+                    }
+                } else {
+                    if (poly.powers[i] == 0) {
+                        cout << " + " << poly.coefficients[i];
+                    } else {
+                        if (poly.powers[i] == 1) {
+                            cout << " + " << poly.coefficients[i] << "x";
+                        } else {
+                            cout << " + " << poly.coefficients[i] << "x^" << poly.powers[i];
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return os;
 }
-ostream& operator <<(ostream &os, BACNHAT bn)
-{
-	if (bn.a[0] == 0)
-	{
-		for (int i = 1; i < bn.n; ++i)
-		{
-			bn.a[i - 1] = bn.a[i];
-			bn.b[i - 1] = bn.b[i];
-		}
-		bn.n -= 1;
 
-	}
-	for (int i = 0; i < bn.n; ++i)
-	{
-		if (i == 0)
-		{
-			if (bn.a[i] != 0)
-			{
-				if (bn.a[i] == 1)
-				{
-					if (bn.b[i] == 0)
-					{
-						cout << bn.a[i];
-					}
-					else
-					{
-						if (bn.b[i] == 1)
-						{
-							cout << "x";
-						}
-						else
-						{
-							cout << "x^" << bn.b[i];
-						}
-
-					}
-
-				}
-				else
-				{
-					if (bn.b[i] == 0)
-					{
-						cout << bn.a[i];
-					}
-					else
-					{
-						if (bn.b[i] == 1)
-						{
-							cout << bn.a[i] << "x";
-						}
-						else
-						{
-							cout << bn.a[i] << "x^" << bn.b[i];
-						}
-
-					}
-				}
-
-			}
-		}
-		else
-		{
-			if (bn.a[i] != 0)
-			{
-				if (bn.a[i] == 1)
-				{
-					if (bn.b[i] == 0)
-					{
-						cout << " + " << bn.a[i];
-					}
-					else
-					{
-						if (bn.b[i] == 1)
-						{
-							cout << " + x";
-						}
-						else
-						{
-							cout << " + x^" << bn.b[i];
-						}
-
-					}
-
-				}
-				else
-				{
-					if (bn.b[i] == 0)
-					{
-						cout << " + " << bn.a[i];
-					}
-					else
-					{
-						if (bn.b[i] == 1)
-						{
-							cout << " + " << bn.a[i] << "x";
-						}
-						else
-						{
-							cout << " + " << bn.a[i] << "x^" << bn.b[i];
-						}
-
-					}
-
-				}
-			}
-		}
-	}
-
-	return os;
+// Function to evaluate the polynomial for a given value of x
+float Evaluate(Polynomial poly, float x) {
+    float result = 0;
+    for (int i = 0; i < poly.size; ++i) {
+        result += poly.coefficients[i] * pow(x, poly.powers[i]);
+    }
+    return result;
 }
-float Tinh(BACNHAT bn, float x)
-{
-	float kq = 0;
-	for (int i = 0; i < bn.n; ++i)
-	{
-		kq += bn.a[i] * pow(x, bn.b[i]);
-	}
-	return kq;
+
+// Function to compute the derivative of the polynomial
+Polynomial Derivative(Polynomial &poly) {
+    for (int i = 0; i < poly.size; ++i) {
+        if (poly.powers[i] == 0) {
+            poly.coefficients[i] = 0;
+        } else {
+            poly.coefficients[i] *= poly.powers[i];
+            poly.powers[i] -= 1;
+        }
+    }
+    return poly;
 }
-BACNHAT daoHam(BACNHAT & bn)
-{
-	for (int i = 0; i < bn.n; ++i)
-	{
-		if (bn.b[i] == 0)
-		{
-			bn.a[i] = 0;
-		}
-		else
-		{
-			bn.a[i] *= bn.b[i];
-			bn.b[i] -= 1;
-		}
-	}
-	return bn;
+
+int main() {
+    float x;
+    Polynomial poly;
+
+    cin >> poly;
+    cin >> x;
+    
+    cout << poly << endl;
+    cout << Evaluate(poly, x) << endl;
+    cout << Derivative(poly);
+    
+    return 0;
 }
