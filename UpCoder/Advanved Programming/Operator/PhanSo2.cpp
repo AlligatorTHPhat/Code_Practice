@@ -1,89 +1,99 @@
 #include <iostream>
-#include <algorithm>
+#include <cmath>
 using namespace std;
 
-struct PhanSo
+struct Fraction
 {
-	int tu, mau;
-	//qua tai >>
-	friend istream& operator >> (istream& is, PhanSo& ps)
+	int numer, denom;
+
+	int gcd(int a, int b)
 	{
-		is >> ps.tu >> ps.mau;
-		return is;
+		if (b == 0) return a;
+		return gcd(b, a % b);
 	}
-	//qua tai <<
-	friend ostream& operator << (ostream& os, PhanSo ps)
+
+	void Simplifies()
 	{
-		ps.RutGon();
-		os << ps.tu << "/" << ps.mau;
-		return os;
-	}
-	//ham rut gon
-	void RutGon()
-	{
-		int d = __gcd(this->tu, this->mau);
-		this->tu /= d;
-		this->mau /= d;
+		int d = gcd(this->numer, this->denom);
+		this->numer /= d;
+		this->denom /= d;
 		return;
 	}
-	//qua tai +
-	PhanSo operator + (PhanSo ps)
-	{
-		PhanSo kq;
-		kq.tu = this->tu * ps.mau + this->mau * ps.tu;
-		kq.mau = this->mau * ps.mau;
-		return kq;
 
-	}
-	//qua tai ==
-	bool operator == (PhanSo ps)
+	friend istream& operator >> (istream& is, Fraction& f)
 	{
-		return this->tu * ps.mau == this->mau * ps.tu;
+		is >> f.numer >> f.denom;
+		return is;
 	}
 
-	bool operator != (PhanSo ps)
+	friend ostream& operator << (ostream& os, Fraction f)
 	{
-		return !(*this == ps);
+		f.Simplifies();
+		os << f.numer << "/" << f.denom;
+		return os;
+	}
+
+	Fraction operator + (Fraction f)
+	{
+		Fraction res;
+		res.numer = this->numer * f.denom + this->denom * f.numer;
+		res.denom = this->denom * f.denom;
+		return res;
+	}
+
+	bool operator  == (Fraction f)
+	{
+		return this->numer * f.denom == this->denom * f.numer;
+	}
+
+	bool operator != (Fraction f)
+	{
+		return ((*this) != f);
 	}
 };
 
 struct Array
 {
-	int n; 
-	PhanSo* arr; // PhanSo arr[100];
-	//qua tai >>
-	friend istream& operator >> (istream& is, Array& a)
+	int size = 0;
+	Fraction *values;
+
+	Fraction operator [] (int index)
+	{ 
+		return values[index];
+	}
+
+	friend istream& operator >> (istream& is, Array& arr) 
 	{
-		a.n = 0; a.arr = new PhanSo[100]; // a.arr
-		while (is >> a.arr[a.n]) a.n++;
+		arr.values = new Fraction[100];
+		while (cin >> arr.values[arr.size]) arr.size++;
+
 		return is;
 	}
-	//qua tai <<
-	friend ostream& operator << (ostream& os, Array a)
+
+	friend ostream& operator << (ostream& os, Array arr)
 	{
-		for (int i = 0; i < a.n; i++)
-		{
-			os << a.arr[a.n] << " ";
-		}
+		arr.Sum();
+
 		return os;
 	}
-	//qua tai []
-	PhanSo& operator [] (int i)
+
+	void Sum()
 	{
-		if (i >= 0 && i < this->n)
-			return this->arr[i];
+		Fraction res = values[0];
+		for (int i = 1; i < this->size; i++)
+		{
+			res = res + values[i];
+		}
+		cout << res;
 	}
 };
 
 int main()
 {
-	Array a; cin >> a;
-	PhanSo res = a.arr[0];
+	Array a;
+	cin >> a;
+	cout << a;
+	
 
-	for (int i = 1; i < a.n; i++)
-	{
-		res = res + a.arr[i];
-	}
-	cout << res;
 	return 0;
 }
