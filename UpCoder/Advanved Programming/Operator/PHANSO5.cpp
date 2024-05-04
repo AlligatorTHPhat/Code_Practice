@@ -1,69 +1,63 @@
 #include <iostream>
-#include <algorithm>
+
 using namespace std;
 
-struct PhanSo {
-    int tu;
-    int mau;
+struct Fraction
+{
+	int numer, denom;
 
-    void rutGon() {
-        int ucln = __gcd(this->tu, this->mau);
-        this->tu /= ucln;
-        this->mau /= ucln;
+	friend istream& operator >> (istream& is, Fraction& f)
+	{
+		is >> f.numer >> f.denom;
 
-        if (this->mau < 0) 
-            this->tu = -this->tu,
-            this->mau = -this->mau;
+		return is;
+	}
 
-        return;
-    }
+	friend ostream& operator << (ostream& os, Fraction f)
+	{
+		os << f.numer << "/" << f.denom;
 
-    friend istream& operator >> (istream &in, PhanSo &p) {
-        in >> p.tu >> p.mau;
-        p.rutGon();
-        return in;
-    }
+		return os;
+	}
 
-    friend ostream& operator << (ostream &out, PhanSo p) {
-        out << p.tu << "/" << p.mau;
-        return out;
-    }
+	Fraction operator ++ ()
+	{
+		this->numer += 1;
+		return (*this);
+	}
 
-    // Tiền tố
-    PhanSo operator ++ () {
-        this->tu += 1;
-        return *this;
-    }
+	Fraction operator ++ (int)
+	{
+		Fraction temp = *this;
+		this->numer += 1;
+		return temp;
+	}
 
-    PhanSo operator -- () {
-        this->tu -= 1;
-        return *this;
-    }
+	Fraction operator -- ()
+	{
+		this->numer -= 1;
+		return (*this);
+	}
 
-    // Hậu tố
-    PhanSo operator ++ (int) {
-        PhanSo tmp = *this;
-        this->tu += 1;
-        return tmp;
-    }
-
-    PhanSo operator -- (int) {
-        PhanSo tmp = *this;
-        this->tu -= 1;
-        return tmp;
-    }
+	Fraction operator - (int)
+	{
+		Fraction temp = *this;
+		this->numer -= 1;
+		return temp;
+	}
 };
+int main()
+{
+	Fraction f;
+	cin >> f; 
+	cout << f;
 
-int main() {
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
+	string str; 
+	cin  >> str;
 
-    PhanSo a; cin >> a;
-    char c; cin >> c;
+	if (str == "++") cout << endl << ++f;
+	else if (str == "--") cout << endl << --f;
 
-    cout << a << endl;
-    if (c == '+') cout << ++a;
-    else cout << --a;
+	return 0;
 
-    return 0;
 }
