@@ -1,29 +1,35 @@
 #include <iostream>
-#include <string>
 #include <vector>
+#include <algorithm>
+#include <string>
 
 using namespace std;
 
-void De_Quy_1(int k, int n, vector<string>& result, string prefix = "") {
-	if (n == 0) result.push_back(prefix);
-	else {
-		for (int i = 1; i <= k; i++) {
-			De_Quy_1(k, n - 1, result, prefix + to_string(i));
-		}
+void generated_kary_strings(vector<string>& results, int k, int n,string prefix)
+{
+	if (prefix.size() == n)
+	{
+		results.push_back(prefix);
+		return;
 	}
+
+	for (int i = 1; i <= k; ++i)
+		generated_kary_strings(results, k, n, prefix + to_string(i));
 }
 
-int main() {
+int main()
+{
 	int k, n;
 	cin >> k >> n;
 
-	vector<string> result;
+	vector<string> kary_strings;
 
-	De_Quy_1(k, n, result);
-	
-	cout << result.size() << endl;
+	generated_kary_strings(kary_strings, k, n, "");
 
-	for (const string& str : result) 
+	sort(kary_strings.begin(), kary_strings.end());
+	cout << kary_strings.size() << endl;
+
+	for (const string& str : kary_strings)
 		cout << str << endl;
 
 	return 0;
