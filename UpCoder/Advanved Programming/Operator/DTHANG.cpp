@@ -64,11 +64,11 @@ struct PhanSo {
 };
 
 char viTriTuongDoi(int D, int Dx, int Dy, int Dv) {
-    if (Dv == 0) return 'V';
-    if (D != 0) return 'C';
+    if (Dv == 0) return 'V'; //vuong
+    if (D != 0) return 'C'; //cat
     else {
-        if (Dx == Dy && Dy == 0) return 'T';
-        if (Dx != 0 && Dy != 0) return 'S';
+        if (Dx == Dy && Dy == 0) return 'T'; //trung
+        if (Dx != 0 && Dy != 0) return 'S'; //song song
     }
 }
 
