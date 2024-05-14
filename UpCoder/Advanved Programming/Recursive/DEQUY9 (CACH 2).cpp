@@ -8,7 +8,7 @@ long Sum(long n) {
 }
 
 long S(long n) {
-    int res = 0;
+    long res = 0;
     for (int i = 1; i <= n; i++) {
         res += Sum(i);
     }
@@ -21,7 +21,7 @@ long Factorial(long n) {
 }
 
 long P(long n) {
-    int res = 0;
+    long res = 0;
     for (int i = 1; i <= n; i++) {
         res += Factorial(i);
     }
@@ -38,3 +38,4 @@ int main() {
 
     return 0;
 }
+
