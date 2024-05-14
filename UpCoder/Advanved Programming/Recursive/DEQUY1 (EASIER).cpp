@@ -17,7 +17,7 @@ int Permutation(int n, int k, string str) {
 int main() {
 	int n, k;
 	cin >> n >> k;
-    string str = "";
+   	string str = "";
 
 	cout << pow(n, k) << endl;
 	Permutation(n, k, "");
