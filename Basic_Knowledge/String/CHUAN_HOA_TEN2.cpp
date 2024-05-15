@@ -42,9 +42,9 @@ int main() {
 
 		for (int i = 0; i < vec.size() - 1; i++) {
 			Chuan_Hoa(vec[i]); cout << vec[i];
-			if (i == vec.size() - 2) cout << " ";
-			cout << endl;
+			if (i != vec.size() - 2) cout << " ";
 		}
+		cout << endl;
 	}
 }
 
