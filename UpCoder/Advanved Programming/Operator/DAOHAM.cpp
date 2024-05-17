@@ -1,123 +1,101 @@
 #include <iostream>
-#include <cmath> // Use cmath instead of math.h for C++
-
+#include <cmath>
 using namespace std;
 
-struct Polynomial {
-    float coefficients[100];
-    int powers[100];
-    int size;
+struct DonThuc {
+    int heSo;
+    int soMu;
+
+    DonThuc daoHam() {
+        DonThuc res;
+        res.heSo = this->heSo * this->soMu;
+        res.soMu = this->soMu - 1;
+        return res;
+    }
+    
+    friend ostream& operator << (ostream &out, DonThuc donThuc) {
+        if (donThuc.heSo != 0) {
+            if (donThuc.soMu != 0) {
+                if (abs(donThuc.heSo) == 1) out << "x";
+                else out << abs(donThuc.heSo) << "x";
+                if (donThuc.soMu > 1) out << "^" << donThuc.soMu;
+            } else out << abs(donThuc.heSo);
+        }
+
+        return out;
+    }
 };
 
-// Overloaded extraction operator for input
-istream& operator>>(istream &is, Polynomial &poly) {
-    is >> poly.size;
-    for (int i = 0; i < poly.size; ++i) {
-        is >> poly.coefficients[i];
-    }
-    for (int i = 0; i < poly.size; ++i) {
-        is >> poly.powers[i];
-    }
-    return is;
-}
+struct DaThuc {
+    int bac;
+    DonThuc giaTri[100];
 
-// Overloaded insertion operator for output
-ostream& operator<<(ostream &os, Polynomial poly) {
-    if (poly.coefficients[0] == 0) {
-        for (int i = 1; i < poly.size; ++i) {
-            poly.coefficients[i - 1] = poly.coefficients[i];
-            poly.powers[i - 1] = poly.powers[i];
+    friend istream& operator >> (istream &in, DaThuc &daThuc) {
+        in >> daThuc.bac;
+        int size = daThuc.bac;
+
+        for (int i = size; i >= 0; i--) {
+            in >> daThuc.giaTri[i].heSo;
+            daThuc.giaTri[i].soMu = i;
         }
-        poly.size -= 1;
+
+        return in;
     }
-    
-    for (int i = 0; i < poly.size; ++i) {
-        if (i == 0) {
-            if (poly.coefficients[i] != 0) {
-                if (poly.coefficients[i] == 1) {
-                    if (poly.powers[i] == 0) {
-                        cout << poly.coefficients[i];
-                    } else {
-                        if (poly.powers[i] == 1) {
-                            cout << "x";
-                        } else {
-                            cout << "x^" << poly.powers[i];
-                        }
-                    }
-                } else {
-                    if (poly.powers[i] == 0) {
-                        cout << poly.coefficients[i];
-                    } else {
-                        if (poly.powers[i] == 1) {
-                            cout << poly.coefficients[i] << "x";
-                        } else {
-                            cout << poly.coefficients[i] << "x^" << poly.powers[i];
-                        }
-                    }
-                }
-            }
-        } else {
-            if (poly.coefficients[i] != 0) {
-                if (poly.coefficients[i] == 1) {
-                    if (poly.powers[i] == 0) {
-                        cout << " + " << poly.coefficients[i];
-                    } else {
-                        if (poly.powers[i] == 1) {
-                            cout << " + x";
-                        } else {
-                            cout << " + x^" << poly.powers[i];
-                        }
-                    }
-                } else {
-                    if (poly.powers[i] == 0) {
-                        cout << " + " << poly.coefficients[i];
-                    } else {
-                        if (poly.powers[i] == 1) {
-                            cout << " + " << poly.coefficients[i] << "x";
-                        } else {
-                            cout << " + " << poly.coefficients[i] << "x^" << poly.powers[i];
-                        }
-                    }
-                }
-            }
+
+    friend ostream& operator << (ostream &out, DaThuc daThuc) {
+        int size = daThuc.bac;
+        bool check = false;
+
+        for (int i = size; i >= 0; i--) {
+            int heSo = daThuc.giaTri[i].heSo;
+
+            if (check && heSo > 0) cout << "+";
+            if (heSo < 0) cout << "-";
+            cout << daThuc.giaTri[i];
+
+            if (heSo != 0) check = true;
         }
+
+        return out;
     }
 
-    return os;
-}
-
-// Function to evaluate the polynomial for a given value of x
-float Evaluate(Polynomial poly, float x) {
-    float result = 0;
-    for (int i = 0; i < poly.size; ++i) {
-        result += poly.coefficients[i] * pow(x, poly.powers[i]);
+    DaThuc daoHamCapMot() {
+        DaThuc res;
+        res.bac = this->bac-1;
+        for (int i = res.bac; i >= 0; i--)  
+            res.giaTri[i] = this->giaTri[i+1].daoHam();
+        return res;
     }
-    return result;
-}
 
-// Function to compute the derivative of the polynomial
-Polynomial Derivative(Polynomial &poly) {
-    for (int i = 0; i < poly.size; ++i) {
-        if (poly.powers[i] == 0) {
-            poly.coefficients[i] = 0;
-        } else {
-            poly.coefficients[i] *= poly.powers[i];
-            poly.powers[i] -= 1;
-        }
+    DaThuc daoHamCapHai() {
+        DaThuc res1, res2;
+        res1 = this->daoHamCapMot();
+        res2 = res1.daoHamCapMot();
+        return res2;
     }
-    return poly;
-}
+
+    int check() {
+        int res = 0;
+        for (int i = this->bac; i >= 0; i--)    
+            res += this->giaTri[i].heSo;
+        return res;
+    }
+};
 
 int main() {
-    float x;
-    Polynomial poly;
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
 
-    cin >> poly;
-    cin >> x;
-    
-    cout << poly << endl;
-    cout << Evaluate(poly, x) << endl;
-    cout << Derivative(poly);
-    
+    DaThuc a; cin >> a;
+    cout << a << endl;
+    DaThuc b = a.daoHamCapMot();
+    DaThuc c = a.daoHamCapHai();
+
+    if (b.check() == 0) cout << 0 << endl;
+    else cout << b << endl;
+
+    if (c.check() == 0) cout << 0 << endl;
+    else cout << c << endl;
+
     return 0;
 }
