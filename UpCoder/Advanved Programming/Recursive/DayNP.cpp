@@ -4,7 +4,7 @@
 using namespace std;
 
 void Day_NP(int number, string prefix = "") {
-	if (number == 1) cout << prefix << endl;
+	if (number == 0) cout << prefix << endl;
 	else {
 		Day_NP(number - 1, prefix + "0");
 		Day_NP(number - 1, prefix + "1");
