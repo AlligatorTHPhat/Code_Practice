@@ -7,7 +7,7 @@ using namespace std;
 //1. Tạo hàm đệ quy
 int S(int n,int x) {
     if (n == 0) return 1;
-    return x * S(n - 1, x);;
+    return x * S(n - 1, x);
 }
 
 int main() {
