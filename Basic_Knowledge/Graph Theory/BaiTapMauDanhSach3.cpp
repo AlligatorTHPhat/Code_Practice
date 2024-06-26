@@ -12,14 +12,15 @@ vector<pair<int, int>> edge;
 int values[1001][1001];
 
 int main() {
+	//Nhap kich thuoc Ma Tran
 	cin >> n;
-
+	//Nhap Ma Tran Ke
 	for (int i = 1; i <= n; i++) {
 		for (int j = 1; j <= n; j++) {
 			cin >> values[i][j];
 		}
 	}
-
+	//Kiem tra va luu Danh Sach Canh
 	for (int i = 1; i <= n; i++) {
 		for (int j = 1; j <= n; j++) {
 			if (values[i][j] && i < j) { // i < j de tranh danh sach bi lap
@@ -27,7 +28,7 @@ int main() {
 			}
 		}
 	}
-
+	//Nhap Danh Sach Canh
 	for (auto it : edge) {
 		cout << it.first << " " << it.second << endl;
 	}
