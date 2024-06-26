@@ -14,9 +14,11 @@ vector<pair<int, int>> edge;
 int values[1001][1001];
 
 int main() {
+	//Nhap kich thuoc Ma Tran
 	cin >> n;
 
 	cin.ignore();
+	//Nhap Danh Sach Ke
 	for (int i = 1; i <= n; i++) {
 		string s, num;
 		getline(cin, s);
@@ -25,7 +27,7 @@ int main() {
 			values[i][stoi(num)] = 1;
 		}
 	}
-
+	//Xuar ra Ma Tran Ke
 	for (int i = 1; i <= n; i++) {
 		for (int j = 1; j <= n; j++) {
 			cout << values[i][j] << " ";
