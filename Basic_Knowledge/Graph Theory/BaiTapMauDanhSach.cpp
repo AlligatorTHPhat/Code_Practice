@@ -7,13 +7,14 @@ int n, m;
 int values[1001][1001];
 
 int main() {
+	//Nhap kich thuoc ma tran
 	cin >> n >> m;
-
+	//Nhap Danh Sach Canh
 	for (int i = 0; i < m; i++) {
 		int x, y; cin >> x >> y;
 		values[x][y] = values[y][x] = 1;
 	}
-	
+	//Xuat ra Ma Tran Ke
 	for (int i = 1; i <= n; i++) {
 		for (int j = 1; j <= n; j++) {
 			cout << values[i][j] << " ";
