@@ -1,4 +1,3 @@
-//Danh Sach Canh (Co Huong) -> Tat Ca Duong Di Ko Trung
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -14,6 +13,7 @@ void input() {
 		adj[x].push_back(y);
 		//adj[y].push_back(x);
 	}
+	//khoi tao tat ca cac phan tu mang cua "visited" la false 
 	memset(visited, false, sizeof(visited));
 }
 
