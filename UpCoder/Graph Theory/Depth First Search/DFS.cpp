@@ -1,28 +1,31 @@
 #include <iostream>
 #include <vector>
 #include <cstring>
+
 using namespace std;
 
-int n, m, u;
-vector<int> adj[1001];
+int Nv, Ne, U;
+vector<int> adj[100];
 bool visited[1001];
 
-void DFS(int u) {
-	cout << u << " ";
-	visited[u] = true;
-	for (int v : adj[u]) {
-		if (!visited[v]) DFS(v);
-	}
+int DFS(int U) {
+	cout << U << " ";
+	visited[U] = true;
+
+	for (int v : adj[U])
+		if (!visited[v])
+			DFS(v);
 }
 
 int main() {
-	cin >> n >> m >> u;
-	for (int i = 0; i < m; i++) {
+	cin >> Nv >> Ne >> U;
+
+	for (int i = 0; i < Ne; i++) {
 		int x, y; cin >> x >> y;
 		adj[x].push_back(y);
 		adj[y].push_back(x);
 	}
-
+	//Set all elements of arr to false
 	memset(visited, false, sizeof(visited));
-	DFS(u);
+	DFS(U);
 }
