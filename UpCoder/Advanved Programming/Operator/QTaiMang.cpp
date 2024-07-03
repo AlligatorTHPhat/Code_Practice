@@ -28,8 +28,9 @@ struct Array {
 		for (int i = 0; i < res.size; i++) {
 			//This checks if the current index i is within the bounds of both arrays (this and arr).
 			if (i < this->size && i < arr.size) res.values[i] = this->values[i] + arr.values[i];
-			else res.values[i] = (i < arr.size ? this->values[i] : arr.values[i]);
+			else res.values[i] = (i < this->size ? this->values[i] : arr.values[i]);
 		}
+		return res;
 	}
 
 	bool operator == (Array arr) {
