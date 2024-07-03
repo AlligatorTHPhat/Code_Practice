@@ -4,9 +4,9 @@
 using namespace std;
 
 int main() {
-	int a, b,c;
+	int a, b;
 	cin >> a >> b;
 
-	cout << max(a,b,c) << min(a,b,c);
+	cout << (a > b ? a : b);
 	return 0;
 }
