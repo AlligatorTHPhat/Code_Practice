@@ -1,80 +1,128 @@
 #include <iostream>
 #include <cmath>
+#include <iomanip>
+
 using namespace std;
 
-struct SoPhuc {
-    int thuc;
-    int ao;
+struct Complex_Number {
+	int a, b;
 
-    friend istream& operator >> (istream& in, SoPhuc& sp) {
-        in >> sp.thuc >> sp.ao;
-        return in;
-    }
+	friend istream& operator >> (istream& is, Complex_Number& z) {
+		is >> z.a >> z.b;
+		return is;
+	}
 
-    friend ostream& operator << (ostream& out, SoPhuc sp) {
-        if (sp.thuc != 0) out << sp.thuc;
+	double Modun() {
+		return sqrt(pow(this->a, 2) + pow(this->b, 2));
+	}
 
-        if (sp.ao != 0) {
-            if (sp.ao > 0 && sp.thuc != 0) out << "+";
-            if (sp.ao < 0) out << "-";
-            out << abs(sp.ao) << "*i";
-        }
+	Complex_Number operator + (Complex_Number z) {
+		Complex_Number res;
+		res.a = this->a + z.a;
+		res.b = this->b + z.b;
+		return res;
+	}
 
-        return out;
-    }
+	Complex_Number operator - (Complex_Number z) {
+		Complex_Number res;
+		res.a = this->a - z.a;
+		res.b = this->b - z.b;
+		return res;
+	}
 
-    SoPhuc operator + (SoPhuc sp) {
-        SoPhuc res;
-        res.thuc = this->thuc + sp.thuc;
-        res.ao = this->ao + sp.ao;
-        return res;
-    }
+	Complex_Number operator * (Complex_Number z) {
+		Complex_Number res;
+		res.a = this->a * z.a - this->b * z.b;
+		res.b = this->a * z.b + this->b * z.a;
+		return res;
+	}
 
-    SoPhuc operator - (SoPhuc sp) {
-        SoPhuc res;
-        res.thuc = this->thuc - sp.thuc;
-        res.ao = this->ao - sp.ao;
-        return res;
-    }
+	friend ostream& operator << (ostream& os, Complex_Number z) {
+		if (z.a != 0) os << z.a;
+		if (z.b > 0 && z.a != 0) os << "+" << z.b << "*i";
+		else if (z.b > 0 && z.a == 0) os << z.b << "*i";
+		else if (z.b < 0) os << z.b << "*i";
+		else if (z.b == 1 && z.a != 0) os << "+i";
+		else if (z.b == 1 && z.a == 0) os << "i";
+		else if (z.b == -1 && z.a != 0) os << "-i";
+		os << endl;
+		return os;
+	}
 
-    SoPhuc operator * (SoPhuc sp) {
-        SoPhuc res;
-        res.thuc = this->thuc * sp.thuc - this->ao * sp.ao;
-        res.ao = this->thuc * sp.ao + this->ao * sp.thuc;
-        return res;
-    }
-
-    bool operator < (SoPhuc sp) {
-        if (this->thuc < sp.thuc) return true;
-        else if (this->thuc == sp.thuc)
-            if (this->ao < sp.ao) return true;
-        return false;
-    }
+	bool operator < ( Complex_Number& z) {
+		if (this->a < z.a) return 1;
+		if (this->a == z.a) {
+			if (this->b < z.b) return 1;
+		}
+		return 0;
+	}
 
 };
 
+struct Array {
+	int size = 0;
+	Complex_Number values[100];
+
+	Complex_Number& operator [] (int index) { return values[index]; }
+
+	friend istream& operator >> (istream& is, Array& arr) {
+		is >> arr.size;
+		for (int i = 0; i < arr.size; i++) {
+			is >> arr.values[i];
+		}
+		return is;
+	}
+
+	friend ostream& operator << (ostream& os, Array arr) {
+		os << arr.Compare_Max();
+		arr.Sum();
+		arr.Accumulation();
+		arr.Subtract();
+
+		return os;
+	}
+
+	void Sum() {
+		Complex_Number res = this->values[0];
+		for (int i = 1; i < this->size; i++) {
+			res = res + this->values[i];
+		}
+		cout << res;
+
+	}
+
+	void Subtract() {
+		cout << Compare_Max() - Compare_Min();
+	}
+
+	void Accumulation() {
+		Complex_Number res = this->values[0];
+		for (int i = 1; i < this->size; i++) {
+			res = res * this->values[i];
+		}
+		cout << res;
+
+	}
+
+	Complex_Number Compare_Max() {
+		Complex_Number max = this->values[0];
+		for (int i = 1; i < this->size; i++) {
+			if (max < this->values[i]) max = this->values[i];
+		}
+		return max;
+	}
+
+	Complex_Number Compare_Min() {
+		Complex_Number min = this->values[0];
+		for (int i = 1; i < this->size; i++) {
+			if (this->values[i] < min ) min = this->values[i];
+		}
+		return min;
+	}
+};
+
 int main() {
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
-
-    int n; cin >> n;
-    SoPhuc arr[n];
-    for (SoPhuc& x : arr) cin >> x;
-
-    SoPhuc lonNhat = arr[0], nhoNhat = arr[0];
-    SoPhuc tong = arr[0], tich = arr[0];
-
-    for (int i = 1; i < n; i++) {
-        if (lonNhat < arr[i]) lonNhat = arr[i];
-        if (arr[i] < nhoNhat) nhoNhat = arr[i];
-        tong = tong + arr[i];
-        tich = tich * arr[i];
-    }
-
-    cout << lonNhat << endl;
-    cout << tong << endl;
-    cout << tich << endl;
-    cout << lonNhat - nhoNhat;
-
-    return 0;
+	Array a;
+	cin >> a;
+	cout << a;
 }
