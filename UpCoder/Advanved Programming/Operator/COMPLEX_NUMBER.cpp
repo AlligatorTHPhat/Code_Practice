@@ -1,95 +1,76 @@
 #include <iostream>
-#include <iomanip>
 #include <cmath>
+#include <iomanip>
+
 using namespace std;
 
-struct SoPhuc {
-    int thuc; int ao;
+struct Complex_Number {
+	int a, b;
 
-    friend istream& operator >> (istream &in, SoPhuc &sp) {
-        in >> sp.thuc >> sp.ao;
-        return in;
-    }
+	friend istream& operator >> (istream& is, Complex_Number& z) {
+		is >> z.a >> z.b;
+		return is;
+	}
 
-    friend ostream& operator << (ostream &out, SoPhuc sp) {
-        out << "{";
-        if (sp.thuc != 0) out << sp.thuc;
+	double Modun() {
+		return sqrt(pow(this->a, 2) + pow(this->b, 2));
+	}
 
-        if (sp.ao != 0) {
-            if (sp.ao > 0 && sp.thuc != 0) out << "+";
-            if (sp.ao < 0) out << "-";
-            if (abs(sp.ao) != 1) 
-                out << abs(sp.ao);
-            out << "i";
-        } 
-        out << "}";
-        return out;
-    }
+	Complex_Number operator + (Complex_Number z) {
+		Complex_Number res;
+		res.a = this->a + z.a;
+		res.b = this->b + z.b;
+		return res;
+	}
 
-    SoPhuc operator + (SoPhuc sp) {
-        SoPhuc res;
-        res.thuc = this->thuc + sp.thuc;
-        res.ao = this->ao + sp.ao;
-        return res;
-    }
-
-    SoPhuc operator - (SoPhuc sp) {
-        SoPhuc res;
-        res.thuc = this->thuc - sp.thuc;
-        res.ao = this->ao - sp.ao;
-        return res;
-    }
-
-    double modun() {
-        return sqrt(this->thuc*this->thuc + this->ao*this->ao);
-    }
+	friend ostream& operator << (ostream& os, Complex_Number z) {
+		os << "{";
+		if (z.a != 0) cout << z.a;
+		if (z.b > 0 && z.a != 0) cout << "+" << z.b << "i";
+		else if (z.b < 0) cout << z.b << "i";
+		else if (z.b == 1 && z.a != 0) cout << "+i";
+		else if (z.b == 1 && z.a == 0) cout << "i";
+		else if (z.b == -1 && z.a != 0) cout << "-i";
+		cout << "}";
+		return os;
+	}
 };
 
-struct DaySoPhuc {
-    int size;
-    SoPhuc *values;
+struct Array {
+	int size = 0;
+	Complex_Number values[100];
 
-    friend istream& operator >> (istream &in, DaySoPhuc &arr) {
-        arr.size = 0; arr.values = new SoPhuc[100];
-        while (in >> arr.values[arr.size]) arr.size++;
-        return in;
-    }
+	Complex_Number& operator [] (int index) { return values[index]; }
 
-    friend ostream& operator << (ostream &out, DaySoPhuc arr) {
-        for (int i = 0; i < arr.size; i++)
-            out << *(arr.values + i) << " ";
-        return out;
-    }
+	friend istream& operator >> (istream& is, Array& arr) {
+		while (is >> arr.values[arr.size]) arr.size++;
+		return is;
+	}
 
-    SoPhuc tinhTong() {
-        SoPhuc res = *(this->values);
-        for (int i = 1; i < this->size; i++)
-            res = res + *(this->values + i);
-        return res;
-    }
+	friend ostream& operator << (ostream& os, Array arr) {
+		for (int i = 0; i < arr.size; i++) {
+			os << arr.values[i] <<  " ";
+		}
+		cout << endl; 
+		for (int i = 0; i < arr.size; i++) {
+			os << fixed << setprecision(2) << arr.values[i].Modun() << " ";
+		}
+		cout << endl; arr.Sum();
+		return os;
+	}
 
-    SoPhuc tinhHieu() {
-        SoPhuc res = *(this->values);
-        for (int i = 1; i < this->size; i++)
-            res = res - *(this->values + i);
-        return res;
-    }
+	void Sum() {
+		Complex_Number res = this->values[0];
+		for (int i = 1; i < this->size; i++) {
+			res = res + this->values[i];
+		}
+		cout << res;
 
-    void tinhModun() {
-        cout << fixed << setprecision(2);
-        for (int i = 0; i < this->size; i++)
-            cout << this->values[i].modun() << " ";
-        return;
-    }
+	}
 };
 
 int main() {
-    DaySoPhuc daySoPhuc; 
-    cin >> daySoPhuc;
-
-    cout << daySoPhuc << endl;
-    daySoPhuc.tinhModun(); cout << endl;
-
-    cout << daySoPhuc.tinhTong();
-    return 0;
+	Array a;
+	cin >> a;
+	cout << a;
 }
