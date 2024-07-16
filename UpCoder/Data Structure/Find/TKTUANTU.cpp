@@ -28,22 +28,33 @@ int main() {
 //Other way
 
 // #include <iostream>
+
 // using namespace std;
 
-// int linear_search(int size,int values[], int n) {
-// 	for (int i = 0; i < size; i++) {
-// 		if (values[i] == n)
-// 			return i;
-// 	} return -1;
+// void input(int &n, int &x, int values[]) {
+// 	cin >> n >> x;
+// 	for (int i = 0; i < n; i++)
+// 		cin >> values[i];
+// }
+
+// void Sequential_Search(int n, int x, int values[]) {
+// 	int res = -1;
+// 	for (int i = 0; i < n; i++) {
+// 		{
+// 			if (x == values[i]) {
+// 				res = i;
+// 				break;
+// 			}
+// 		}
+// 	} cout << res;
 // }
 
 // int main() {
-// 	int size, values[100], n;
-// 	cin >> size >> n;
-// 	for (int i = 0; i < size; i++) 
-// 		cin >> values[i];
+// 	int n, x;
+// 	int values[100];
 
-// 	cout << linear_search(size, values, n);
-	
-// 	return 0;
+// 	input(n, x, values);
+
+// 	Sequential_Search(n, x, values);
+
 // }
