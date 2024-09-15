@@ -135,7 +135,7 @@ void Calculate_Degree(GRAPH graph) {
 
 }
 
-void Largest_Degree(GRAPH& graph) {
+void Largest_Degree(GRAPH graph) {
     int max_degree = -100;
     int v = -1;
     vector<int> vec;
@@ -171,12 +171,13 @@ void Largest_Degree(GRAPH& graph) {
 
     cout << "Dinh co bac lon nhat la: ";
     if (vec.size() == 0) cout << v + 1;
-    else
+    else if (vec.size() > 0)
         for (auto x : vec) cout << x + 1 << " ";
+    else cout << "Khong co";
     cout << endl;
 }
 
-void Lowest_Degree(GRAPH& graph) {
+void Lowest_Degree(GRAPH graph) {
     int min_degree = 100;
     int v = -1;
     vector<int> vec;
@@ -212,8 +213,9 @@ void Lowest_Degree(GRAPH& graph) {
 
     cout << "Dinh co bac nho nhat la: ";
     if (vec.size() == 0) cout << v + 1;
-    else
+    else if (vec.size() > 0)
         for (auto x : vec) cout << x + 1 << " ";
+    else cout << "Khong co";
     cout << endl;
 }
 
@@ -283,49 +285,65 @@ void Find_Even_Odd_Degree_Vertices(GRAPH graph) {
     }
 }
 
-bool Check_Pendant_Vertices(GRAPH graph) {
-    for (int i = 0; i < graph.Nv; i++) {
-        if (graph.degree[i] == 1) {
-            return true;
-        }
-    }
-    return false;
-}
-
-bool Check_Isolated_Vertices(GRAPH graph) {
-    for (int i = 0; i < graph.Nv; i++) {
-        if (graph.degree[i] == 0) {
-            return true;
-        }
-    }
-    return false;
-}
-
 void Find_Pendant_Isolated_Vertices(GRAPH graph) {
-    if (Check_Pendant_Vertices(graph)) {
+    if (Check_Undirected_Graph(graph)) {
+        // For undirected graphs
+        bool hasPendant = false;
         cout << "Dinh treo: ";
         for (int i = 0; i < graph.Nv; i++) {
             if (graph.degree[i] == 1) {
                 cout << i + 1 << " ";
+                hasPendant = true;
             }
         }
-    }
-    else cout << "Khong co dinh treo";
+        if (!hasPendant) {
+            cout << "Khong co";
+        }
+        cout << endl;
 
-    cout << endl;
-
-    if (Check_Isolated_Vertices(graph)) {
+        bool hasIsolated = false;
         cout << "Dinh co lap: ";
         for (int i = 0; i < graph.Nv; i++) {
             if (graph.degree[i] == 0) {
                 cout << i + 1 << " ";
+                hasIsolated = true;
             }
         }
-    }
-    else cout << "Khong co dinh co lap";
+        if (!hasIsolated) {
+            cout << "Khong co";
+        }
+        cout << endl;
 
-    cout << endl;
+    }
+    else {
+        bool has_Pendant = false;
+        cout << "Dinh treo: ";
+        for (int i = 0; i < graph.Nv; i++) {
+            if ((graph.in_Degree[i] == 1 && graph.out_Degree[i] == 0) || (graph.in_Degree[i] == 0 && graph.out_Degree[i] == 1)) {
+                cout << i + 1 << " ";
+                has_Pendant = true;
+            }
+        }
+        if (!has_Pendant) {
+            cout << "Khong co";
+        }
+        cout << endl;
+
+        bool has_Isolated = false;
+        cout << "Dinh co lap: ";
+        for (int i = 0; i < graph.Nv; i++) {
+            if (graph.in_Degree[i] == 0 && graph.out_Degree[i] == 0) {
+                cout << i + 1 << " ";
+                has_Isolated = true;
+            }
+        }
+        if (!has_Isolated) {
+            cout << "Khong co";
+        }
+        cout << endl;
+    }
 }
+
 
 int main() {
     GRAPH graph;
@@ -365,3 +383,21 @@ int main() {
 
     return 0;
 }
+
+//Vo huong
+//6
+//0 2 0 0 0 0
+//2 0 3 0 0 0
+//0 3 0 4 0 0
+//0 0 4 0 1 0
+//0 0 0 1 0 0
+//0 0 0 0 0 0
+
+//Co huong
+//6
+//0 5 0 0 0 0
+//0 0 3 0 0 0
+//0 0 0 2 0 0
+//0 0 0 0 4 0
+//0 0 0 0 0 1
+//0 0 0 0 0 0
