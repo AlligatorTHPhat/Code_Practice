@@ -36,6 +36,12 @@ int main()
 	return 0;
 }
 
+// 5 3
+// 2 1 3 5 3
+
+// 5 10
+// 2 1 3 5 7
+	
 //#include <iostream>
 //
 //using namespace std;
