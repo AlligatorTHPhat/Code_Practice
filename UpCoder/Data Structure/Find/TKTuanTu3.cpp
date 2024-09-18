@@ -1,23 +1,44 @@
 #include <iostream>
+#include <vector>
+
 using namespace std;
 
-int size_values = 0, values[100];
-
-
-void linear_search(int size_values, int values[], int x) {
-	int res = -1, tmp = -10e6;
-	for (int i = 0; i < size_values; i++) {
-		if (values[i] <= x && values[i] > tmp) res = i, tmp = values[i];
-	} cout << res;
-}
-
-int main() {
-    int temp, x;
-    
+void input(int& x, vector<int>& vec)
+{
 	cin >> x;
-	
-	while(cin >> temp) values[size_values++] = temp;
-	linear_search(size_values, values, x);
 
-    return 0;
+	vec.resize(0);
+
+	int n;
+	while (cin >> n)
+	{
+		vec.push_back(n);
+	}
 }
+
+int sequential_search(int x, vector<int>vec)
+{
+	int res = -1, max = -10e6;
+	for (int i = 0; i < vec.size(); i++)
+		if (vec[i] <= x && max < vec[i]) { res = i, max = vec[i]; };
+
+	return res;
+}
+
+int main()
+{
+	ios::sync_with_stdio;
+	cin.tie(0); cout.tie(0);
+
+	int x;
+	vector<int> vec;
+
+	input(x, vec);
+	cout << sequential_search(x, vec);
+
+	return 0;
+}
+
+
+//4
+//2 1 3 5 3 1
