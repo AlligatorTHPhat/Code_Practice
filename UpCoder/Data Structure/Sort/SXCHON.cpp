@@ -21,7 +21,7 @@ void input(int values[], int& array_size) {
 }
 
 void Selection_Sort(int values[], int array_size) {
-	int i, j, min, tmp;
+	int i, j, min;
 	for (int i = 0; i < array_size - 1; i++) {
 		min = i;
 		for (int j = i + 1; j < array_size; j++) {
@@ -41,4 +41,3 @@ int main() {
 		cout << values[i] << " ";
 	} return 0;
 }
-
