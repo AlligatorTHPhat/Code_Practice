@@ -21,7 +21,7 @@ int sequential_search(int n, int x, int y, vector<int>vec)
 	int result = -1;
 	for (int i = 0; i < vec.size(); i++)
 	{
-		if (vec[i] == x) { result = i; break; }
+		if (vec[i] == x) { return i; }
 	}
 
 	int a = x, b = x;
