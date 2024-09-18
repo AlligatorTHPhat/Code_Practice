@@ -1,24 +1,52 @@
 #include <iostream>
 #include <vector>
+
 using namespace std;
 
-int size_values, values[100], target;
-vector<int>vec;
+vector <int> res;
 
-int linear_search(int size_values, int values[], int target) {
-	for (int i = 0; i < size_values; i++) {
-		if (values[i] == target) vec.push_back(i);
-	}
-	if (!vec.empty()) {
-		for (auto x : vec) cout << x << " ";
-	}
-	else cout << -1;
+void input(int& n, int& x, vector<int>& vec)
+{
+	cin >> n >> x;
+
+	vec.resize(n);
+
+	for (int i = 0; i < vec.size(); i++)
+		cin >> vec[i];
+
 }
 
-int main() {
-	cin >> size_values >> target;
-	for (auto& x : values) cin >> x;
+int sequential_search(int n, int x, vector<int>vec)
+{
+	int result = -1;
+	for (int i = 0; i < vec.size(); i++)
+	{
+		if (vec[i] == x) { result = i; res.push_back(i); }
+	}
 
-	linear_search(size_values, values, target);
+	return result;
+}
+
+void print_result(int n, int x, vector<int>vec)
+{
+	sequential_search(n, x, vec);
+	if (!res.empty())
+	{
+		for (auto& r : res)
+			cout << r << " ";
+	}
+	else
+		cout << -1;
+}
+
+int main()
+{
+	int n, x;
+	vector<int> vec;
+
+	input(n, x, vec);
 	
+	print_result(n, x, vec);
+
+	return 0;
 }
