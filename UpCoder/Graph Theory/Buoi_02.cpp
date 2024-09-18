@@ -104,103 +104,54 @@ void Print_Graph(GRAPH graph) {
     cout << endl;
 }
 
-int visited[100];
+int visited[MAX];
 int interconnected_domain;
 
-void Visit(GRAPH graph, int i, int interconnected_domain)
-{
+void Visit(GRAPH graph, int i, int interconnected_domain) {
     visited[i] = interconnected_domain;
-    for (int j = 0; j < graph.Nv; j++)
-    {
-        if (visited[j] == false && graph.adj[i][j] != 0)
-        {
+    for (int j = 0; j < graph.Nv; j++) {
+        if (visited[j] == 0 && graph.adj[i][j] != 0) {
             Visit(graph, j, interconnected_domain);
         }
     }
 }
 
-int q[MAX];
+void Visit_Queue(GRAPH graph, int i, int domain) {
+    queue<int> q;
+    q.push(i);
+    visited[i] = domain;
 
-void Visit_Queue(GRAPH graph, int i, int domain)
-{
-    q[0] = i;
-    int index = 0, cnt = 1;
+    while (!q.empty()) {
+        int current = q.front();
+        q.pop();
 
-    while (index < cnt)
-    {
-        int x = q[index];
-        index++;
-
-        //q[cnt] = domain;
-        for (int j = 0; graph.Nv; j++)
-        {
-            if((visited[j]==0) && (graph.adj[i][j] != 0))
-            {
-                
-                q[cnt] = j;
-                cnt++;
-                visited[j] = 1;
+        for (int j = 0; j < graph.Nv; j++) {
+            if (visited[j] == 0 && graph.adj[current][j] != 0) {
+                visited[j] = domain;
+                q.push(j);
             }
         }
     }
 }
 
-//void Consider_The_Connectivity_Of_Graph(GRAPH graph)
-//{
-//    interconnected_domain = 0;
-//    for (int i = 0; i < graph.Nv; i++)
-//    {
-//        if(visited[i] == 0) interconnected_domain;
-//    }
-//
-//    for (int i = 0; i < graph.Nv; i++)
-//    {
-//        if (visited[i] == 0)
-//        {
-//            interconnected_domain++;
-//            Visit(graph, i, interconnected_domain);
-//            Visit_Queue(graph, i, interconnected_domain);
-//        }
-//    }
-//}
+void Consider_The_Connectivity_Of_Graph(GRAPH graph) {
+    interconnected_domain = 0;
+    fill(visited, visited + graph.Nv, 0); // Reset the visited array to 0
 
-void Visit_Queue(GRAPH graph, int i, int domain)
-{
-    int q[100]; // Assuming the graph has at most 100 vertices
-    int visited[100] = { 0 }; // All vertices are initially unvisited
-    q[0] = i;
-    int index = 0, cnt = 1;
-    visited[i] = 1; // Mark the starting vertex as visited
-
-    while (index < cnt)
-    {
-        int x = q[index];
-        index++;
-
-        // Instead of q[cnt] = domain, iterate over neighbors of x
-        for (int j = 0; j < graph.Nv; j++)
-        {
-            if (!visited[j] && graph.adj[x][j] != 0) // Check if j is connected and not visited
-            {
-                q[cnt] = j;
-                cnt++;
-                visited[j] = 1; // Mark j as visited
-            }
+    for (int i = 0; i < graph.Nv; i++) {
+        if (visited[i] == 0) {
+            interconnected_domain++;
+            Visit(graph, i, interconnected_domain);
         }
     }
 }
 
-
-void Print_Interconnected(GRAPH graph)
-{
+void Print_Interconnected(GRAPH graph) {
     cout << "So mien lien thong: " << interconnected_domain << endl;
-    for (int i = 1; i <= interconnected_domain; i++)
-    {
-    
-        for (int j = 0; j < graph.Nv; j++)
-        {
-            if (visited[j] == i)
-            {
+    for (int i = 1; i <= interconnected_domain; i++) {
+        cout << "Mien lien thong " << i << " gom cac dinh: ";
+        for (int j = 0; j < graph.Nv; j++) {
+            if (visited[j] == i) {
                 cout << setw(4) << j;
             }
         }
@@ -208,8 +159,7 @@ void Print_Interconnected(GRAPH graph)
     }
 }
 
-int main() 
-{
+int main() {
     GRAPH graph;
     Read_Graph("dothi.txt", graph);
     Print_Graph(graph);
@@ -225,11 +175,11 @@ int main()
 
     Print_Interconnected(graph);
 }
-// 7
-// 0 1 0 0 0 0 1
-// 1 0 1 0 0 0 0
-// 0 1 0 0 0 0 1
-// 0 0 0 0 1 0 0  
-// 0 0 0 1 0 1 0
-// 0 0 0 0 1 0 0 
-// 1 0 1 0 0 0 0 
+ //7
+ //0 1 0 0 0 0 1
+ //1 0 1 0 0 0 0
+ //0 1 0 0 0 0 1
+ //0 0 0 0 1 0 0  
+ //0 0 0 1 0 1 0
+ //0 0 0 0 1 0 0 
+ //1 0 1 0 0 0 0 
