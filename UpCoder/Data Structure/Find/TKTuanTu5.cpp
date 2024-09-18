@@ -1,41 +1,41 @@
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
-void input(int& n, int& x, int& y, int values[]) {
+int n, x, y;
+vector<int> vec;
+
+void input(int& n, int& x, int& y, vector<int>& vec)
+{
 	cin >> n >> x >> y;
-	for (int i = 0; i < n; i++) {
-		cin >> values[i];
-	} return;
+
+	vec.resize(n);
+
+	for (int i = 0; i < vec.size(); i++)
+		cin >> vec[i];
 }
 
-void linear_Search(int n, int x, int y, int values[]) {
-	for (int i = 0; i < n; i++) {
-		if (values[i] == x) {
-			cout << i; 
-			return;
-		}
+int sequential_search(int n, int x, int y, vector<int>vec)
+{
+	int result = -1;
+	for (int i = 0; i < vec.size(); i++)
+	{
+		if (vec[i] == x) { result = i; break; }
 	}
 
 	int a = x, b = x;
 	while (a >= x - y && b <= x + y) {
 		for (int i = 0; i < n; i++) {
-			if (values[i] == a || values[i] == b) {
-				cout << i; return;
+			if (vec[i] == a || vec[i] == b) {
+				return i;
 			}
 		} a--, b++;
-	} cout << -1; return;
+	} return - 1;
 }
 
-int main() {
-	int n, x, y;
-	int values[100];
-
-	input(n, x, y, values);
-
-	linear_Search(n, x, y, values);
-
-	return 0;
+int main()
+{
+	input(n, x, y, vec);
+	cout << sequential_search(n, x, y, vec);
 }
-
-
