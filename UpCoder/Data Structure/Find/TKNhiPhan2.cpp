@@ -1,33 +1,59 @@
 #include <iostream>
+
 using namespace std;
 
-int size_values;
-int target;
+void input(int& size, int& target, int values[])
+{
+	cin >> size >> target;
+	for (int i = 0; i < size; i++)
+	{
+		cin >> values[i];
+	}
+}
 
-int binary_search(int size_values, int values[], int target) {
-	int left = 0, right = target - 1;
+bool check_valid(int size, int values[])
+{
+	for (int i = 0; i < size; i++)
+	{
+		if (values[i] >= values[i - 1])
+			return true;
+	}
+	return false;
+}
 
-	while (left <= right) {
+int binary_search(int size, int target, int values[])
+{
+	int left = 0, right = size - 1;
+	while (left <= right)
+	{
 		int mid = (left + right) / 2;
 		if (values[mid] == target) return mid;
 		else if (values[mid] < target) left = mid + 1;
-		else if (values[mid]) right = mid - 1;
-	} return -1;
+		else if (values[mid] > target) right = mid - 1;
+	}
+	return -1;
 }
 
-int main() {
-
-	cin >> size_values >> target;
-
-	int values[100];
-	for (auto &x : values)
-		cin >> x;
-
-	int res = binary_search(size_values, values, target);
-
-	if (res != -1) {
-		for (int i = 0; i < size_values; i++)
-			if(values[i] == target) cout << i << " ";
+void print_result(int size, int target, int values[])
+{
+	int result = binary_search(size, target, values);
+	if (result != -1)
+	{
+		for (int i = 0; i < size; i++)
+			if (values[i] == target) cout << i << " ";
 	}
+		
 	else cout << -1;
+}
+
+int main()
+{
+	int size, target, values[100];
+	input(size, target, values);
+	if (check_valid(size, values))
+		print_result(size, target, values);
+	else
+		cout << "Khong hop le";
+
+	return 0;
 }
