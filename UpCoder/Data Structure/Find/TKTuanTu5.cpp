@@ -38,4 +38,6 @@ int main()
 {
 	input(n, x, y, vec);
 	cout << sequential_search(n, x, y, vec);
+
+	return 0;
 }
