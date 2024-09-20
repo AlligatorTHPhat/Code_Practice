@@ -292,6 +292,33 @@ void Print_BFS(int s, int f, GRAPH graph, const string& filename) {
     outfile.close();
 }
 
+//void Print_BFS(int s, int f, GRAPH graph, const string& filename) {
+//    // Reset lại các giá trị trước khi duyệt BFS
+//    fill(visited_BFS, visited_BFS + graph.Nv, false);
+//    fill(save_BFS, save_BFS + graph.Nv, -1);
+//    saving.clear();  // Xóa dữ liệu trước đó
+//
+//    BFS(graph, s);
+//
+//    ofstream outfile(filename, ios::app);
+//
+//    if (visited_BFS[f]) {
+//        outfile << "Duyet theo chieu rong : " << endl;
+//
+//        int j = f;
+//
+//        // In ngược đường đi từ `f` về `s`
+//        while (j != s) {
+//            outfile << j << "<---";
+//            j = save_BFS[j];
+//        }
+//        outfile << s << endl;
+//    }
+//    else {
+//        outfile << "Khong co duong di tu " << s << " den " << f << endl;
+//    }
+//}
+
 int main() {
     GRAPH graph;
     Read_Graph("dothi.txt", graph);
@@ -306,4 +333,3 @@ int main() {
 
     return 0;
 }
-
