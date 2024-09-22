@@ -414,7 +414,7 @@ void Print_Interconnected_Domain(ofstream& ofile, Graph graph)
 		{
 			if (visited_domain[j] == i)
 			{
-				ofile << setw(4) << j + 1;
+				ofile << setw(4) << j;
 			}
 		}
 		ofile << endl;
