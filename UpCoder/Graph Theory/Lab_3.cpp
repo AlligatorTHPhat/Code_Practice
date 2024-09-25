@@ -1,245 +1,155 @@
 #include <iostream>
-#include <iomanip>
-#include <string>
-#include <fstream>
-#include <limits>
 #include <vector>
-#include <queue>
+#include <fstream>
 
 using namespace std;
 
-#define RESET   "\033[0m"
-#define RED     "\033[31m"
-#define BLUE    "\033[34m"
-
-const int MAX = 100;
-
-struct GRAPH {
-    int Nv, Ne;
-    int adj[MAX][MAX];
-    int degree[MAX];
-
-    vector<int> in_Degree;
-    vector<int> out_Degree;
-
-    GRAPH() : Nv(0), Ne(0), in_Degree(0), out_Degree(0) {
-        for (int i = 0; i < MAX; ++i) {
-            degree[i] = 0;
-            for (int j = 0; j < MAX; ++j) {
-                adj[i][j] = 0;
-            }
-        }
-    }
-
-    void Init_Degrees() {
-        in_Degree.resize(Nv, 0);
-        out_Degree.resize(Nv, 0);
-    }
+const int INF = 10e9;
+struct Edge {
+    int u, v, w;
 };
 
-bool Check_Undirected_Graph(GRAPH graph) {
-    for (int i = 0; i < graph.Nv; i++) {
-        for (int j = 0; j < graph.Nv; j++) {
-            if (graph.adj[i][j] != graph.adj[j][i])
-                return false;
-        }
-    }
-    return true;
-}
+struct Graph {
+    int Nv;                           // Number of vertices
 
-void Read_Graph(string fn, GRAPH& graph) {
-    ifstream file(fn);
+    Graph() : Nv(0) {}
+    vector<vector<int>> adj;          // Adjacency matrix
+    vector<Edge> T;                   // Array to store edges of the spanning tree
+};
 
-    if (file.is_open()) {
-        file >> graph.Nv;
+// Read the graph from file
+void Read_Graph(Graph& g, string fn) {
+    ifstream f(fn);
 
-        for (int i = 0; i < graph.Nv; i++) {
-            for (int j = 0; j < graph.Nv; j++) {
-                file >> graph.adj[i][j];
+    if (f.is_open()) {
+        f >> g.Nv;
+
+        g.adj.resize(g.Nv, vector<int>(g.Nv));  // Initialize NxN adjacency matrix
+
+        for (int i = 0; i < g.Nv; i++) {
+            for (int j = 0; j < g.Nv; j++) {
+                f >> g.adj[i][j];
             }
         }
+        f.close();
+    }
+    else {
+        cout << "Khong mo duoc file input!" << endl;
+    }
+}
 
-        graph.Init_Degrees();
+// Find the edge with the minimum weight
+Edge Find_Min_Edge(vector<Edge> e) {
+    if (e.empty()) {
+        cout << "Khong co canh!" << endl;
+        return { -1, -1, INF }; // Invalid edge
+    }
 
-        graph.Ne = 0;
+    Edge min_edge = e[0];
+    for (auto edge : e) {
+        if (min_edge.w > edge.w)
+            min_edge = edge;
+    }
+    return min_edge;
+}
 
-        if (Check_Undirected_Graph(graph)) {
-            for (int i = 0; i < graph.Nv; i++) {
-                for (int j = 0; j < graph.Nv; j++) {
-                    if (graph.adj[i][j] != 0) {
-                        graph.Ne++;
-                        graph.degree[i]++;
+// Find the edge with the maximum weight
+Edge Find_Max_Edge(vector<Edge> e) {
+    if (e.empty()) {
+        cout << "Khong co canh!" << endl;
+        return { -1, -1, INT_MIN }; // Invalid edge
+    }
+
+    Edge max_edge = e[0];
+    for (const auto& edge : e) {
+        if (max_edge.w < edge.w)
+            max_edge = edge;
+    }
+    return max_edge;
+}
+
+// Prim's algorithm to find the minimum spanning tree
+void Prim(Graph& g, vector<bool>& visited) {
+    visited[0] = true;
+    int nT = 0;
+
+    while (nT < g.Nv - 1) {
+        vector<Edge> e;  // Temporary vector to store available edges
+
+        // Explore visited vertices
+        for (int i = 0; i < g.Nv; i++) {
+            if (visited[i]) {
+                // Explore unvisited vertices
+                for (int j = 0; j < g.Nv; j++) {
+                    if (!visited[j] && g.adj[i][j] != 0) {
+                        e.push_back({ i, j, g.adj[i][j] });
                     }
                 }
             }
-            graph.Ne /= 2;
         }
-        else {
-            for (int i = 0; i < graph.Nv; i++) {
-                for (int j = 0; j < graph.Nv; j++) {
-                    if (graph.adj[i][j] != 0) {
-                        graph.Ne++;
-                        graph.out_Degree[i]++;
-                        graph.in_Degree[j]++;
-                    }
-                }
-            }
-        }
-        file.close();
+
+        if (e.empty()) break;
+
+        // Select the edge with minimum weight
+        Edge min_edge = Find_Min_Edge(e);
+        g.T.push_back(min_edge); // Store the edge in the spanning tree
+        visited[min_edge.v] = true;
+        nT++;
+    }
+}
+
+// Calculate the total weight of the spanning tree
+int Sum_T(vector<Edge> e) {
+    int total_W = 0;
+    for (const Edge& edge : e) {
+        total_W += edge.w;
+    }
+    return total_W;
+}
+
+// Output the edges of the graph to the provided stream
+void Edges_in_Graph(vector<Edge> e, ostream& ofile) {
+    for (Edge edge : e) {
+        ofile << "(" << edge.u + 1 << "," << edge.v + 1 << ") : " << edge.w << "\n\n";
+    }
+}
+
+// Print the smallest and largest edge in the spanning tree
+void Print_Max_Min_Edge(vector<Edge> e, ostream& ofile) {
+    Edge max_edge = Find_Max_Edge(e);
+    Edge min_edge = Find_Min_Edge(e);
+
+    ofile << "Minimum edge: (" << min_edge.u + 1 << "," << min_edge.v + 1 << ") \n\n";
+    ofile << "Maximum edge: (" << max_edge.u + 1 << "," << max_edge.v + 1 << ") \n\n";
+}
+
+// Write the results of the spanning tree to a file
+void Print_Spanning_Tree(Graph g,  string fn) {
+    ofstream ofile(fn);
+
+    if (ofile.is_open()) {
+        vector<bool> visited(g.Nv, false);  // Array to track visited vertices
+
+        Prim(g, visited);                   // Find the minimum spanning tree
+
+        ofile << "Total weight of the minimum spanning tree: " << Sum_T(g.T) << "\n\n";
+        ofile << "Edges in the minimum spanning tree:\n";
+
+        Edges_in_Graph(g.T, ofile);
+        Print_Max_Min_Edge(g.T, ofile);
+
+        ofile.close();
     }
     else {
-        cout << "Khong doc duoc file!" << endl;
+        cout << "Could not open output file!" << endl;
     }
 }
 
-void Print_Graph(GRAPH graph) {
-    cout << "So dinh cua do thi : " << graph.Nv << endl;
-    cout << "Do thi : " << endl;
-    for (int i = 0; i < graph.Nv; i++) {
-        for (int j = 0; j < graph.Nv; j++) {
-            cout << setw(4) << graph.adj[i][j] << " ";
-        }
-        cout << endl;
-    }
-    cout << endl;
+int main() {
+    Graph g;
+
+    Read_Graph(g, "input.txt");
+    Print_Spanning_Tree(g, "output.txt");
+
+    return 0;
 }
-
-bool visited[MAX];
-int save[MAX];
-
-void DFS(GRAPH graph, int i)
-{
-    visited[i] = true;
-    for (int j = 0; j < graph.Nv; j++)
-    {
-        if (visited[j] == false && graph.adj[i][j])
-        {
-            save[j] = i;
-            DFS(graph, j);
-        }
-    }
-}
-
-//void BFS(GRAPH graph, int start) {
-//    queue<int> q;
-//    bool visited[MAX] = { false };
-//
-//    q.push(start);
-//    visited[start] = true;
-//
-//    while (!q.empty()) {
-//        int u = q.front();
-//        q.pop();
-//        cout << u << " ";
-//
-//        for (int v = 0; v < graph.Nv; v++) {
-//            if (graph.adj[u][v] && !visited[v]) {
-//                visited[v] = true;
-//                q.push(v);
-//            }
-//        }
-//    }
-//    cout << endl;
-//}
-//
-//void Print_DFS(int s, int f, GRAPH graph)
-//{
-//    for (int i = 0; i < graph.Nv; i++)
-//    {
-//        visited[i] = 0;
-//        save[i] = -1;
-//    }
-//    DFS(graph, s);
-//
-//    if (visited[f] != 0)
-//    {
-//        int j = f;
-//
-//        while (j != s)
-//        {
-//            cout << j << "<---";
-//            j = save[j];
-//        }
-//        cout << s << endl;
-//    }
-//    else cout << "Khong co dung di tu " << s << " toi " << f << endl;
-//
-//}
-
-void BFS(GRAPH graph, int start) {
-    queue<int> q;
-
-    for (int i = 0; i < graph.Nv; i++) {
-        visited[i] = false;
-        save[i] = -1;
-    }
-
-    visited[start] = true;
-    q.push(start);
-
-    while (!q.empty()) {
-        int u = q.front();
-        q.pop();
-        
-        cout << u << " ";
-        for (int v = 0; v < graph.Nv; v++) {
-            if (graph.adj[u][v] && !visited[v]) {
-                visited[v] = true;
-                save[v] = u; 
-                q.push(v);
-            }
-        }
-    }
-    cout << endl;
-}
-
-void Print_BFS(int s, int f, GRAPH graph) {
-    BFS(graph, s); 
-
-    if (visited[f]) { 
-        int j = f;
-        vector<int> path;
-
-        
-        while (j != s) {
-            path.push_back(j);
-            j = save[j];
-        }
-        path.push_back(s);
-
-        
-        for (int i = path.size() - 1; i > 0; i--) {
-            cout << path[i] << "<--";
-        }
-        cout << path[0] << endl;
-    }
-    else {
-        cout << "Khong co duong di tu " << s << " toi " << f << endl;
-    }
-}
-
-
-int main()
-{
-    GRAPH graph;
-    Read_Graph("dothi.txt", graph);
-    Print_Graph(graph);
-
-    if (Check_Undirected_Graph(graph))
-        cout << RED << "La do thi vo huong" << RESET << endl;
-    else
-        cout << BLUE << "La do thi co huong" << RESET << endl;
-
-    cout << endl;
-
-    Print_BFS(0, 7, graph);
-}
-
-// 8
-// 0 1 0 0 0 1 0 0
-// 1 0 1 1 0 0 0 0 
-// 0 1 0 0 1 0 0 0 
-// 0 0 1 0 0 0 0 0
-// 1 0 0 0 0 0 1 0
-// 0 0 0 0 0 1 0 1
-// 0 0 0 0 0 0 1 0
