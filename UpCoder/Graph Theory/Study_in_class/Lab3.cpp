@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
+#include <iomanip>
 
 using namespace std;
 
@@ -123,8 +124,30 @@ void Print_Max_Min_Edge(vector<Edge> e, ostream& ofile) {
     ofile << "Maximum edge: (" << max_edge.u + 1 << "," << max_edge.v + 1 << ") \n\n";
 }
 
+void Print_Spinning_Matrix(ofstream& os, Graph graph)
+{
+    os << "Do thi cay khung nho nhat co ma tran la:\n";
+
+    vector<vector<int>> spanning_Matrix(graph.Nv, vector<int>(graph.Nv, 0));
+
+    for (auto& edge : graph.T)
+    {
+        spanning_Matrix[edge.u][edge.v] = edge.w;
+        spanning_Matrix[edge.v][edge.u] = edge.w;
+    }
+
+    for (int i = 0; i < graph.Nv; i++)
+    {
+        for (int j = 0; j < graph.Nv; j++)
+        {
+            os << setw(4) << spanning_Matrix[i][j];
+        }
+        os << "\n";
+    }
+}
+
 // Write the results of the spanning tree to a file
-void Print_Spanning_Tree(Graph g,  string fn) {
+void Print_Spanning_Tree(Graph g, string fn) {
     ofstream ofile(fn);
 
     if (ofile.is_open()) {
@@ -137,6 +160,8 @@ void Print_Spanning_Tree(Graph g,  string fn) {
 
         Edges_in_Graph(g.T, ofile);
         Print_Max_Min_Edge(g.T, ofile);
+
+        Print_Spinning_Matrix(ofile, g);
 
         ofile.close();
     }
