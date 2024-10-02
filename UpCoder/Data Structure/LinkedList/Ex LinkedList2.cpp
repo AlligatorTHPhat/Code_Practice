@@ -4,12 +4,12 @@ using namespace std;
 
 template <class DataType>
 class Node {
-public:
-	DataType _data;
-	Node* _pNext;
-public:
-	Node(DataType data);
-	void display();
+	public:
+		DataType _data;
+		Node* _pNext;
+	public:
+		Node(DataType data);
+		void display();	
 };
 
 template <class DataType>
@@ -24,21 +24,21 @@ void Node<DataType>::display() {
 }
 
 template <class DataType>
-class LinkedList {
-private:
-	Node<DataType>* _pHead; // luu dia chi phan tu dau tien
-	Node<DataType>* _pTail; //luu dia chi phan tu cuoi cung
-	int _iSize;				// luu so luong phan tu
-public:
-	LinkedList();		//phuog thuc khoi tao mac dinh
-	~LinkedList();		//phuong thuc huy
+class LinkedList{
+	private:
+		Node<DataType>* _pHead; // luu dia chi phan tu dau tien
+		Node<DataType>* _pTail; //luu dia chi phan tu cuoi cung
+		int _iSize;				// luu so luong phan tu
+	public:
+		LinkedList();		//phuog thuc khoi tao mac dinh
+		~LinkedList();		//phuong thuc huy
 
-	void addHead(DataType data);
-	void addAfter(Node<DataType>* node, DataType data);
-	Node<DataType>* search(DataType data);
-	Node<DataType>* searchPre(Node<DataType>* node);
+		void addHead(DataType data);
+		void addAfter(Node<DataType>* node, DataType data);
+		Node<DataType>* search(DataType data);
+		Node<DataType>* searchPre(Node<DataType>* node);
 
-	void display();
+		void display();
 };
 
 template <class DataType>
@@ -93,8 +93,8 @@ void LinkedList<DataType>::addAfter(Node<DataType>* node, DataType data) {
 template <class DataType>
 Node<DataType>* LinkedList<DataType>::search(DataType data) {
 	Node<DataType>* p = _pHead;
-
-	while ((p != NULL) && (p->_data != data))
+	
+	while ((p!=NULL) && (p->_data!=data))
 		p = p->_pNext;
 	return p;
 }
