@@ -1,0 +1,123 @@
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+#include <vector>
+#include <limits>
+#include <string>
+using namespace std;
+
+const int MAX = 100;
+const int INF = 1e9;
+
+int DuongDi[MAX];
+int LastV[MAX];  
+
+int Length[MAX];  
+bool ThuocT[MAX]; 
+
+struct Graph {
+    int sodinh;
+    int adj[MAX][MAX];
+
+    int start, end;
+
+    Graph() : sodinh(0), adj() {}
+};
+
+void readGraph(Graph& g, string fn) {
+    ifstream f(fn);
+    if (f.is_open()) {
+        f >> g.sodinh;
+
+
+        f >> g.start >>g. end;
+
+        for (int i = 0; i < g.sodinh; i++) {
+            for (int j = 0; j < g.sodinh; j++) {
+                f >> g.adj[i][j];
+                if (g.adj[i][j] == 0 && i != j) g.adj[i][j] = INF; 
+            }
+        }
+        f.close();
+    }
+    else {
+        cout << "Khong the mo tep tin dau vao!" << endl;
+    }
+}
+
+bool FordBellman(Graph graph, int n, int start) {
+    for (int i = 0; i < n; i++) {
+        Length[i] = INF;
+        LastV[i] = -1; 
+    }
+    Length[start] = 0; 
+
+    for (int i = 0; i < n - 1; i++) {
+        for (int u = 0; u < n; u++) {
+            for (int v = 0; v < n; v++) {
+                if (graph.adj[u][v] != INF && Length[u] != INF) {
+                    if (Length[u] + graph.adj[u][v] < Length[v]) {
+                        Length[v] = Length[u] + graph.adj[u][v];
+                        LastV[v] = u; 
+                    }
+                }
+            }
+        }
+    }
+
+    for (int u = 0; u < n; u++) {
+        for (int v = 0; v < n; v++) {
+            if (graph.adj[u][v] != INF && Length[u] != INF) {
+                if (Length[u] + graph.adj[u][v] < Length[v]) {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
+void printGraph(int x, int y, string fn) {
+    ofstream f(fn);
+
+    if (f.is_open()) {
+        int v = y, i;
+        int id = 0;
+        int total = 0;
+
+        while (v != x) {
+            DuongDi[id] = v;
+            total += Length[v] - Length[LastV[v]]; 
+            v = LastV[v];
+            id++;
+        }
+
+        DuongDi[id] = x;
+
+        f << "Duong di ngan nhat tu " << x << " den " << y << " la:\n";
+        for (i = id; i > 0; i--) {
+            f << DuongDi[i] << "<--";
+        }
+        f << DuongDi[i] << endl;
+        f << "Tong do dai duong di ngan nhat la: " << Length[y] << endl;
+        f.close();
+    }
+    else {
+        cout << "Khong the mo tep tin dau ra!" << endl;
+    }
+}
+
+int main() {
+    Graph g;
+    readGraph(g, "input.txt");
+
+
+    if (FordBellman(g, g.sodinh, g.start)) {
+        printGraph(g.start, g.end, "output.txt");
+    }
+    else {
+        cout << "Khong the tim duong di do chu trinh trong so am!" << endl;
+    }
+
+    return 0;
+}
