@@ -1,10 +1,8 @@
 #include <iostream>
-#include <vector>
-
 using namespace std;
 
 template <typename DataType>
-void input(int& _size, DataType& find, DataType values[])
+void input(DataType& _size, DataType& find, DataType values[])
 {
 	cin >> _size >> find;
 	for (int i = 0; i < _size; i++)
@@ -14,30 +12,34 @@ void input(int& _size, DataType& find, DataType values[])
 }
 
 template <typename DataType>
-vector<DataType> sequential_find(int _size, DataType find, DataType values[])
+int sequential_find(DataType _size, DataType find, DataType values[], DataType results[])
 {
-	vector<DataType> result;
+	int res_size = 0;
 	for (int i = 0; i < _size; i++)
 	{
 		if (values[i] == find)
 		{
-			result.push_back(i);
+			results[res_size] = i;
+			res_size++;
 		}
 	}
-	return result;
+	return res_size;
 }
 
 template <typename DataType>
-void print_sequential_result(int _size, DataType find, DataType values[])
+void print_sequential_result(DataType _size, DataType find, DataType values[])
 {
-	vector<DataType> result = sequential_find(_size, find, values);
-	if (result.empty())
+	DataType results[100];
+	int res_size = sequential_find(_size, find, values, results);
+
+	if (res_size == 0)
 		cout << -1;
 	else
 	{
-		for (DataType res : result)
-			cout << res << " ";
+		for (int i = 0; i < res_size; i++)
+			cout << results[i] << " ";
 	}
+	cout << endl;
 }
 
 int main()
@@ -49,6 +51,59 @@ int main()
 
 	return 0;
 }
+
+
+// #include <iostream>
+// #include <vector>
+
+// using namespace std;
+
+// template <typename DataType>
+// void input(int& _size, DataType& find, DataType values[])
+// {
+// 	cin >> _size >> find;
+// 	for (int i = 0; i < _size; i++)
+// 	{
+// 		cin >> values[i];
+// 	}
+// }
+
+// template <typename DataType>
+// vector<DataType> sequential_find(int _size, DataType find, DataType values[])
+// {
+// 	vector<DataType> result;
+// 	for (int i = 0; i < _size; i++)
+// 	{
+// 		if (values[i] == find)
+// 		{
+// 			result.push_back(i);
+// 		}
+// 	}
+// 	return result;
+// }
+
+// template <typename DataType>
+// void print_sequential_result(int _size, DataType find, DataType values[])
+// {
+// 	vector<DataType> result = sequential_find(_size, find, values);
+// 	if (result.empty())
+// 		cout << -1;
+// 	else
+// 	{
+// 		for (DataType res : result)
+// 			cout << res << " ";
+// 	}
+// }
+
+// int main()
+// {
+// 	int n, x, values[100];
+// 	input<int>(n, x, values);
+
+// 	print_sequential_result<int>(n, x, values);
+
+// 	return 0;
+// }
 
 // #include <iostream>
 // #include <vector>
