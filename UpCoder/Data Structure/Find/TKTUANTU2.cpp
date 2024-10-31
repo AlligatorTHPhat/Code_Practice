@@ -1,8 +1,9 @@
 #include <iostream>
+
 using namespace std;
 
 template <typename DataType>
-void input(DataType& _size, DataType& find, DataType values[])
+void input(int& _size, DataType& find, DataType values[])
 {
 	cin >> _size >> find;
 	for (int i = 0; i < _size; i++)
@@ -12,14 +13,14 @@ void input(DataType& _size, DataType& find, DataType values[])
 }
 
 template <typename DataType>
-int sequential_find(DataType _size, DataType find, DataType values[], DataType results[])
+DataType sequential_find(int _size, DataType find, DataType values[], int result[])
 {
 	int res_size = 0;
 	for (int i = 0; i < _size; i++)
 	{
 		if (values[i] == find)
 		{
-			results[res_size] = i;
+			result[res_size] = i;
 			res_size++;
 		}
 	}
@@ -27,24 +28,24 @@ int sequential_find(DataType _size, DataType find, DataType values[], DataType r
 }
 
 template <typename DataType>
-void print_sequential_result(DataType _size, DataType find, DataType values[])
+void print_sequential_result(int _size, DataType find, DataType values[])
 {
-	DataType results[100];
-	int res_size = sequential_find(_size, find, values, results);
-
+	int result[100];
+	int res_size = sequential_find(_size, find, values, result);
 	if (res_size == 0)
 		cout << -1;
 	else
 	{
 		for (int i = 0; i < res_size; i++)
-			cout << results[i] << " ";
+			cout << result[i] << " ";
 	}
-	cout << endl;
 }
 
 int main()
 {
-	int n, x, values[100];
+	int n;
+
+	int x, values[100];
 	input<int>(n, x, values);
 
 	print_sequential_result<int>(n, x, values);
