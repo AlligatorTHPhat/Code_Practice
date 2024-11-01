@@ -67,7 +67,7 @@ void Queue<DataType>::enQueue(DataType data)
 	{
 		for (int i = _iFront; i < _iCapactiy; i++)
 		{
-			_values[i - 1] = values[i];
+			_values[i - 1] = _values[i];
 		}
 
 		_iRear--;
