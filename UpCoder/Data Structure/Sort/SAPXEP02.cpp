@@ -1,54 +1,121 @@
 #include <iostream>
-#include <vector>
-#include <algorithm>
 
 using namespace std;
 
-bool Check_Prime_Number(int n)
+bool is_prime_number(int& n)
 {
-    for (int i = 2; i * i <= n; i++)
-        if (n % i == 0) return false;
-    return n > 1;
+	if (n <= 1) return false;
+	for (int i = 2; i * i <= n; i++)
+		if (n % i == 0)
+			return false;
+	return true;
 }
 
-void Input(int& n, vector<int>& prime, vector<int>& values)
+void input(int& n, int& cntPrime, int vPrime[], int values[])
 {
-    cin >> n;
-    values.resize(n);  
-    for (int i = 0; i < n; i++)
-    {
-        cin >> values[i];
-        if (Check_Prime_Number(values[i]))
-            prime.push_back(values[i]);
-    }
+	cin >> n;
+
+	cntPrime = 0;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> values[i];
+		if (is_prime_number(values[i]))
+			vPrime[cntPrime++] = values[i];
+	}
 }
 
-void Print_Prime(int n, vector<int>& prime, vector<int>& values)
+template <typename DataType>
+void interchange_sort(int n, DataType values[])
 {
-    sort(prime.rbegin(), prime.rend());  
-
-    int Prime_index = 0;
-    for (int i = 0; i < n; i++)
-        if (Check_Prime_Number(values[i]))
-            values[i] = prime[Prime_index++]; 
+	for (int i = 0; i < n; i++)
+		for (int j = i + 1; j < n; j++)
+			if (values[i] < values[j])
+				swap(values[i], values[j]);
+			
 }
 
-void Output(int n, vector<int>& prime, vector<int>& values)
+void solve_prime(int n, int cntPrime, int vPrime[], int values[])
 {
-    Print_Prime(n, prime, values);  
-    for (int i = 0; i < n; i++)
-        cout << values[i] << " ";
-    cout << endl;
+	interchange_sort(cntPrime, vPrime);
+
+	int iPrime = 0;
+	for (int i = 0; i < n; i++)
+		if (is_prime_number(values[i]))
+			values[i] = vPrime[iPrime++];
+}
+
+void output(int n, int cntPrime, int vPrime[], int values[])
+{
+	solve_prime(n, cntPrime, vPrime, values); 
+
+	for (int i = 0; i < n; i++)
+		cout << values[i] << " ";
 }
 
 int main()
 {
-    int n;
-    vector<int> values;
-    vector<int> prime;
+	int n, cntPrime;
 
-    Input(n, prime, values);  
-    Output(n, prime, values);
+	int values[100], vPrime[100];
 
-    return 0;
+	input(n, cntPrime, vPrime, values);
+	output(n, cntPrime, vPrime, values);
+
+	return 0l;
 }
+
+
+// #include <iostream>
+// #include <vector>
+// #include <algorithm>
+
+// using namespace std;
+
+// bool Check_Prime_Number(int n)
+// {
+//     for (int i = 2; i * i <= n; i++)
+//         if (n % i == 0) return false;
+//     return n > 1;
+// }
+
+// void Input(int& n, vector<int>& prime, vector<int>& values)
+// {
+//     cin >> n;
+//     values.resize(n);  
+//     for (int i = 0; i < n; i++)
+//     {
+//         cin >> values[i];
+//         if (Check_Prime_Number(values[i]))
+//             prime.push_back(values[i]);
+//     }
+// }
+
+// void Print_Prime(int n, vector<int>& prime, vector<int>& values)
+// {
+//     sort(prime.rbegin(), prime.rend());  
+
+//     int Prime_index = 0;
+//     for (int i = 0; i < n; i++)
+//         if (Check_Prime_Number(values[i]))
+//             values[i] = prime[Prime_index++]; 
+// }
+
+// void Output(int n, vector<int>& prime, vector<int>& values)
+// {
+//     Print_Prime(n, prime, values);  
+//     for (int i = 0; i < n; i++)
+//         cout << values[i] << " ";
+//     cout << endl;
+// }
+
+// int main()
+// {
+//     int n;
+//     vector<int> values;
+//     vector<int> prime;
+
+//     Input(n, prime, values);  
+//     Output(n, prime, values);
+
+//     return 0;
+// }
