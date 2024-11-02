@@ -143,4 +143,6 @@ int main()
 	input(n, values);
 
 	output(n, values);
+
+	return 0;
 }
