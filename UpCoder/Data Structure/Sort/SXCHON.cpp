@@ -107,6 +107,22 @@ int partition(int start, int end, DataType values[])
 }
 
 template <typename DataType>
+void insertion_Sort(int n, DataType values[])
+{
+    for (int i = 1; i < n; i++)
+    {
+        DataType key = values[i];
+        int j = i - 1;
+
+        while (j >= 0 && values[j] > key) {
+            values[j + 1] = values[j];
+            j = j - 1;
+        }
+        values[j + 1] = key;
+    }
+}
+
+template <typename DataType>
 void quick_sort(int left, int right, DataType values[])
 {
     if (left < right)
@@ -123,7 +139,8 @@ void print_result(int n, DataType values[])
     // selection_sort(n, values);
     // interchange_sort(n, values);
     //bubble_sort(n, values);
-    quick_sort(0, n - 1, values);
+    insertion_Sort(n, values); 
+    //quick_sort(0, n - 1, values);
 
     for (int i = 0; i < n; i++)
     {
