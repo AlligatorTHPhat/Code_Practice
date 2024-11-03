@@ -58,8 +58,6 @@ void reverse_bubble_sort(DataType n, DataType values[])
 
 void output(int n, int values[])
 {
-	//reverse_bubble_sort(n, values);
-
 	for (int i = 0; i < n; i++)
 		if (prime_number(sum(values[i])))
 			cout << values[i] << " ";
