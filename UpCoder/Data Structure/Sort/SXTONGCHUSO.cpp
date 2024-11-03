@@ -77,5 +77,7 @@ int main()
 
 	output(n, values);
 
+	delete[] values;
+
 	return 0;
 }
