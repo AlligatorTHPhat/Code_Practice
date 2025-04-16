@@ -2,21 +2,16 @@
 
 using namespace std;
 
-int sum = 0;
-
-int TONGCS(int i)
+int TONGCS(int n)
 {
-	if (i <= 0)
-		return 0;
-
-	return i % 10 + TONGCS(i / 10);
+    if(n < 10) return n;
+    return (n % 10) + TONGCS(n / 10);
 }
 
 int main()
 {
-	int n; cin >> n;
-	
-	cout << TONGCS(n);
-
-	return 0;
+    int n; 
+    cin >> n;
+    cout << TONGCS(n);
+    return 0;
 }
